@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300&display=swap');
+
+.custom-bg-gradient-to-t{
+    background-image: linear-gradient(
+        to top,
+        #EFFBFF 0%,
+        #EFFBFF 50%,
+        #FFF 50%,
+        #FFF 100%
+    );
+}
+
+.custom-hover-right-to-left{
+    background-size: 200%;
+    background-image: linear-gradient(to right, #001C66, #00ADEF, #00ADEF, #001C66);
+}
+
+.custom-hover-right-to-left:hover{
+    background-position: 102% 0;
+    transition: all 0.4s ease-in-out;
+}
