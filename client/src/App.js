@@ -2,7 +2,7 @@ import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import path from './utils/path';
 import { Public, Login, Home, DetailCourse, ResetPassword } from './pages/public';
-import {AdminLayout, Dashboard, ManageCourses, ManageRooms, ManageSchedules, ManageUsers} from './pages/admin'
+import {AdminLayout, Dashboard, ManageCourses, ManageRooms, ManageSchedules, ManageUsers, CreateCourses} from './pages/admin'
 import {MemberLayout, Personal} from './pages/member'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,6 +23,7 @@ function App() {
               <Route path={path.MANAGE_ROOMS} element={<ManageRooms/>}/>
               <Route path={path.MANAGE_SCHEDULES} element={<ManageSchedules/>}/>
               <Route path={path.MANAGE_USERS} element={<ManageUsers/>}/>
+              <Route path={path.CREATE_COURSES} element={<CreateCourses/>}/>
             </Route>
             <Route path={path.TEACHER} element={<TeacherLayout/>}>
                {/*Teacher pages*/}
