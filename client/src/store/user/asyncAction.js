@@ -3,11 +3,11 @@ import * as apis from '../../apis'
 
 export const getOne = createAsyncThunk('user/getOne', async(data, {rejectWithValue}) => {
     const response = await apis.apiGetOne()
-    console.log(response.mes);
+    console.log(response);
 
     if(!response.status){
         return rejectWithValue(response)
     }
     
-    return response.mes
+    return response.msg
 })

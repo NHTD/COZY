@@ -39,18 +39,19 @@ const login = asyncHandler(async(req, res) => {
 
     const response = await User.findOne({email})
     if(response && await response.isCorrectPassword(password)){
+        const { password, role, refreshToken, ...userData } = response.toObject()
         const accessToken = generateAccessToken(response._id, response.email)
-        const refreshToken = generateRefreshToken(response._id)
+        const newRefreshToken = generateRefreshToken(response._id)
 
-        await User.findByIdAndUpdate(response._id, {refreshToken}, {new: true})
+        await User.findByIdAndUpdate(response._id, {refreshToken: newRefreshToken}, {new: true})
 
-        res.cookie('refreshToken', refreshToken, {httpOnly: true, secure: true})
+        res.cookie('refreshToken', newRefreshToken, {httpOnly: true, secure: true})
 
         return res.status(200).json({
             status: response ? true : false,
             accessToken,
             refreshToken,
-            msg: response ? response : 'Something went wrong',
+            msg: userData ? userData : 'Something went wrong',
         })
     }else{
         throw new Error('Email or password has failed')
@@ -147,7 +148,7 @@ const getUserById = asyncHandler(async(req, res) => {
     const user = await User.findById(_id)
     return res.status(200).json({
         status: user ? true : false,
-        mes: user? user : 'Can not find user' 
+        msg: user ? user : 'Can not find user' 
     })
 })
 
@@ -160,7 +161,7 @@ const updateUser = asyncHandler(async(req, res) => {
     const user = await User.findByIdAndUpdate(_id, req.body, {new: true})
     return res.status(200).json({
         status: user ? true : false,
-        mes: user ? 'Update is successful' : 'Can not update user. Something went wrong'
+        msg: user ? 'Update is successful' : 'Can not update user. Something went wrong'
     })
 })
 
@@ -173,7 +174,7 @@ const updateUserByAdmin = asyncHandler(async(req, res) => {
     const updateUser = await User.findByIdAndUpdate(uid, req.body, {new: true})
     return res.status(200).json({
         status: updateUser ? true : false,
-        mes: updateUser ? 'Update is successful' : 'Can not update user. Something went wrong'
+        msg: updateUser ? 'Update is successful' : 'Can not update user. Something went wrong'
     })
 })
 
@@ -183,7 +184,7 @@ const deleteUserById = asyncHandler(async(req, res) => {
     const deleteUser = await User.findByIdAndDelete(uid)
     return res.status(200).json({
         status: deleteUser ? true : false,
-        mes: deleteUser ? 'Delete is successful' : 'Can not update user. Something went wrong'
+        msg: deleteUser ? 'Delete is successful' : 'Can not update user. Something went wrong'
     })
 })
 
@@ -196,7 +197,7 @@ const getAllStudentByTeacher = asyncHandler(async(req, res) => {
     const student = await User.find({role: 'user'})
     return res.status(200).json({
         status: student ? true : false,
-        mes: student ? student : 'Something went wrong'
+        msg: student ? student : 'Something went wrong'
     })
 })
 
@@ -218,14 +219,14 @@ const updateCourse = asyncHandler(async (req, res) => {
 
         return res.status(200).json({
             status: updateUserCart ? true : false,
-            mes: updateUserCart ? 'This course existed in order' : 'Cannot update'
+            msg: updateUserCart ? 'This course existed in order' : 'Cannot update'
         });
     }else{
         const updateUserCart = await User.findByIdAndUpdate(_id, {$push: {cart: {course: cid}}}, {new: true})
 
         return res.status(200).json({
             status: updateUserCart ? true : false,
-            mes: updateUserCart ? 'Updated' : 'Can not update'
+            msg: updateUserCart ? 'Updated' : 'Can not update'
         })
     }
 })

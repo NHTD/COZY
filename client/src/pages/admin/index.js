@@ -1,0 +1,6 @@
+export {default as AdminLayout} from './AdminLayout'
+export {default as ManageCourses} from './ManageCourses'
+export {default as ManageRooms} from './ManageRooms'
+export {default as ManageSchedules} from './ManageSchedules'
+export {default as ManageUsers} from './ManageUsers'
+export {default as Dashboard} from './Dashboard'

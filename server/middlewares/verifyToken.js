@@ -20,7 +20,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 const isAdmin = asyncHandler(async (req, res, next) => {
     const {_id} = req.user
     const data = await User.findById(_id)
-    if(data.role !== 'admin'){
+    if(+data.role !== 1){
         throw new Error('Require admin role')
     }
     next()
@@ -29,7 +29,7 @@ const isAdmin = asyncHandler(async (req, res, next) => {
 const isTeacher = asyncHandler(async (req, res, next) => {
     const {_id} = req.user
     const data = await User.findById(_id)
-    if(data.role !== 'teacher'){
+    if(+data.role !== 2){
         throw new Error('Require teacher role')
     }
     next()

@@ -13,11 +13,12 @@ export const userSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn
-            // state.current = action.payload.userData
+            state.current = action.payload.userData
             state.token = action.payload.token
         },
         logout: (state, action) => {
             state.isLoggedIn = false
+            state.current = null
             state.token = null
         },
         clearMessage: (state) => {

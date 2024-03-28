@@ -34,7 +34,6 @@ const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {isLoggedIn, current, mes} = useSelector(state => state.user)
-
     useEffect(() => {
         if(isLoggedIn){
             dispatch(getOne())
@@ -76,9 +75,11 @@ const Header = () => {
             
             {isLoggedIn && current
             ? <div className='w-full flex justify-center items-center gap-1'>
-                <span className='text-white text-[16px]'>
+                <Link className='text-white text-[16px]'
+                    to={+current?.role === 1 ? `/${path.ADMIN}/${path.DASHBOARD}` : +current?.role === 2 ? `/${path.TEACHER}` : `/${path.MEMBER}/${path.PERSONAL}`}
+                >
                     {`${current?.last_name} ${current?.first_name}`}
-                </span>
+                </Link>
                 <span onClick={() => dispatch(logout())} className='text-white inline cursor-pointer hover-text-[700] hover:text-[#00ADEF]'><IoIosLogOut size={18}/></span>
             </div>
             : 
@@ -97,4 +98,4 @@ const Header = () => {
 }
 
 export default Header
-//className='text-white inline cursor-pointer hover-text-[700] hover:text-[#00ADEF]' onClick={dispatch(logout())}
+//className='text-white inline cursor-pointer hover-text-[700] hover:text- [#00ADEF]' onClick={dispatch(logout())}

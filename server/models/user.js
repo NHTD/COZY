@@ -26,9 +26,11 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    //1: Admin, 2: Teacher, 3: User
     role:{
         type:String,
-        default: 'user'
+        enum: [1, 2, 3],
+        default: 3
     },
     address:{
         type: String,
