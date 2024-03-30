@@ -22,3 +22,7 @@
     background-position: 102% 0;
     transition: all 0.4s ease-in-out;
 }
+
+.w500{
+    width: 500px;
+}

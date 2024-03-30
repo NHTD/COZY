@@ -59,12 +59,77 @@ const login = asyncHandler(async(req, res) => {
 })
 
 const getAllUsers = asyncHandler(async(req, res) => {
-    const response = await User.find()
+    const queries = {...req.query}
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(el => delete queries[el])
 
-    return res.status(200).json({
-        status: response ? true : false,
-        msg: response ? response : 'Can not get all users'
-    })
+    let queryString = JSON.stringify(queries)
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)
+    const formatedQueries = JSON.parse(queryString)
+    if(queries?.first_name){
+        formatedQueries.first_name = {$regex: queries.first_name, $options: 'i'}
+    }
+
+    // const query = {}
+    // if(req.query.q) {
+    //     query = {$or: [
+    //         {first_name: {$regex: queries.q, $options: 'i'}},
+    //         {email: {$regex: queries.q, $options: 'i'}}
+    //     ]}
+    // }
+    if(req.query.q) {
+        delete formatedQueries.q
+        formatedQueries['$or'] = [
+            {first_name: {$regex: queries.q, $options: 'i'}},
+            {email: {$regex: queries.q, $options: 'i'}}
+        ]
+    }
+
+
+    let queryCommand = User.find(formatedQueries)
+
+    // if(req.query.s) {
+    //     formatedQueries['$or'] = [
+    //         {first_name: {$regex: queries.q, $options: 'i'}},
+    //         {email: {$regex: queries.q, $options: 'i'}}
+    //     ]
+    // }
+
+    if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+
+    if(req.query.fields){
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+
+    const page = +req.query.page || 1
+    const limit = +req.query.limit || process.env.LIMIT_USERS
+    const skip = (page-1)*limit
+    queryCommand.skip(skip).limit(limit)
+    try {
+        const response = await queryCommand.exec();
+        
+        if (!response) {
+          return res.status(200).json({
+            success: false,
+            users: 'Cannot get all Users',
+            counts: 0
+          });
+        }
+      
+        const counts = await User.countDocuments(formatedQueries);
+        
+        return res.status(200).json({
+          success: true,
+          users: response ? response : 'Cannot get all Users',
+          counts
+        });
+    } catch (err) {
+        throw new Error(err.message);
+    }      
 })
 
 const refreshAccessToken = asyncHandler(async(req, res) => {
@@ -165,6 +230,15 @@ const updateUser = asyncHandler(async(req, res) => {
     })
 })
 
+const createUsers = asyncHandler(async(req, res) => {
+    const response = await User.create(users)
+    return res.status(200).json({
+        status: response ? true : false,
+        msg: response ? response : 'Can not create user'
+    })
+
+})
+
 const updateUserByAdmin = asyncHandler(async(req, res) => {
     const {uid} = req.params
     if(Object.keys(req.body).length === 0){
@@ -244,4 +318,5 @@ module.exports = {
     updateUser,
     getAllStudentByTeacher,
     updateCourse,
+    createUsers
 }

@@ -4,6 +4,7 @@ const {verifyToken, isAdmin, isTeacher} = require('../middlewares/verifyToken')
 
 router.post('/register', controllers.register)
 router.post('/', controllers.login)
+router.post('/createuser', controllers.createUsers)
 router.get('/', [verifyToken, isAdmin], controllers.getAllUsers)
 router.get('/refreshtoken', controllers.refreshAccessToken)
 router.get('/getOne', [verifyToken], controllers.getUserById)
