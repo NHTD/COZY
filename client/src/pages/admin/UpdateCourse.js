@@ -1,60 +1,74 @@
-import React, {useState, useEffect} from 'react'
-import { InputForm, Button } from '../../components'
-import { useForm } from 'react-hook-form'
-import {useSelector, useDispatch} from 'react-redux'
-import { getBase64, validate } from '../../utils/helper'
-import { apiCreateCourse } from '../../apis'
+import React, { memo, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form';
+import { getBase64 } from '../../utils/helper';
+import { InputForm, Button } from '../../components';
 import {toast} from 'react-toastify'
+import { apiUpdateCourse } from '../../apis';
 
-const CreateCourses = () => {
-  const {courses} = useSelector(state => state.course)
-  const dispatch = useDispatch()
+const UpdateCourse = ({editCourse, render, setEditCourse}) => {
 
-  const {register, formState: {errors}, reset, handleSubmit, watch} = useForm()
+  const {register, handleSubmit, formState:{errors}, reset, watch} = useForm()
+
   const [preview, setPreview] = useState({
     image: ""
   })
 
-  const handleCreateCourse = async (data) => {
+  const handleUpdateCourse = async (data) => {
     const formData = new FormData()
+    data.image = data?.image?.length===0 ? preview.image : data.image[0]
     for(let i of Object.entries(data)){
-      console.log(i[0], i[1])
       formData.append(i[0], i[1])
     }
-    if(data.image){
-      formData.append('image', data.image[0])
-    } 
-    const response = await apiCreateCourse(formData)
+    const response = await apiUpdateCourse(formData, editCourse._id)
+    // console.log(data.image.length)
+    // formData.append('image', data.image = data?.image?.length===0 ? preview.image : data.image[0])
+    console.log(response)
     if(response.status){
       toast.success(response.mes)
+      render()
+      setEditCourse(null)
     }else{
       toast.success(response.mes)
     }
   }
-  
+
+  useEffect(() => {
+    reset({
+      course_name: editCourse?.course_name,
+      title: editCourse?.title || '',
+      des: editCourse?.des || '',
+      start_date: editCourse?.start_date || '',
+      course_length: editCourse?.course_length || '',
+      price: editCourse?.price || '',
+      createdAt: editCourse?.createdAt || ''
+    })
+
+    setPreview({
+      image: editCourse?.image || '' 
+    })
+  }, [editCourse])
+
+
   const handlePreviewImage = async (file) => {
     const base64Image = await getBase64(file)
     setPreview({...preview, image: base64Image})
   }
-  // console.log(watch('image')[0])
-  useEffect(() => {
-    handlePreviewImage(watch('image')[0])
-  }, [watch('image')])  
 
-  // const handleFileUpload = async (e) => {
-  //   const file = e.target.files[0]
-  //   const base64 = await getBase64(file)
-  //   setPreview({...preview, image: base64})
-  // }
-  // console.log(preview.image)
+  useEffect(() => {
+    if(watch('image')){
+      handlePreviewImage(watch('image')[0])
+    }
+  }, [watch('image')])
 
   return (
-    <div className='w-full'>
-      <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
-        <span>Create New Course</span>
-      </h1>
+    <div className='w-full flex flex-col gap-4 relative'>
+      <div className='h-[69px] w-full'></div>
+      <div className='px-4 border-b bg-gray-100 flex justify-between items-center right-0 left-[327px] fixed top-0'>
+        <h1 className='text-3xl font-bold tracking-tight'>Update courses</h1>
+        <span className='hover:underline cursor-pointer' onClick={() => setEditCourse(null)}>Test</span>
+      </div>
       <div className='p-4'>
-        <form onSubmit={handleSubmit(handleCreateCourse)}>
+        <form onSubmit={handleSubmit(handleUpdateCourse)}>
           <InputForm
             label='Course name'
             register={register}
@@ -133,7 +147,7 @@ const CreateCourses = () => {
               <input 
                 type='file' 
                 id='image'
-                {...register('image', { required: 'Need fill' })}
+                {...register('image')}
                 // onChange={(e) => handleFileUpload(e)}
               />
               {errors['image'] && <small className='text-xs text-red-500'>{errors['image']?.message}</small>}
@@ -147,7 +161,7 @@ const CreateCourses = () => {
           }
           <div className='my-6'>
             <Button
-              name='Create new course'
+              name='Update new course'
               type='submit'
             />
           </div>
@@ -157,4 +171,4 @@ const CreateCourses = () => {
   )
 }
 
-export default CreateCourses
+export default memo(UpdateCourse)

@@ -4,8 +4,8 @@ import { generateRange } from '../utils/helper'
 const usePagination = (totalUserCount, currentPage, siblingCount=1) => {
     const paginationArray = useMemo(() => {
         const pageSize = +process.env.REACT_APP_LIMIT || 10
-        const paginationCount = Math.ceil(totalUserCount / pageSize)
-        const totalPaginationItem = siblingCount + 5
+        const paginationCount = Math.ceil(+totalUserCount / pageSize)
+        const totalPaginationItem = +siblingCount + 5
 
         if(paginationCount <= totalPaginationItem){
             return generateRange(1, paginationCount)

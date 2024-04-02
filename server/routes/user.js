@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const controllers = require('../controllers/user')
 const {verifyToken, isAdmin, isTeacher} = require('../middlewares/verifyToken')
+const upload = require('../configs/cloudinary')
 
 router.post('/register', controllers.register)
 router.post('/', controllers.login)
@@ -10,7 +11,7 @@ router.get('/refreshtoken', controllers.refreshAccessToken)
 router.get('/getOne', [verifyToken], controllers.getUserById)
 router.post('/forgotPassword', controllers.forgotPassword)
 router.put('/resetPassword', controllers.resetPassword)
-router.put('/updateuser', [verifyToken], controllers.updateUser)
+router.put('/updateuser', [verifyToken], upload.single('avatar'), controllers.updateUser)
 router.get('/getAllStudent', [verifyToken, isTeacher], controllers.getAllStudentByTeacher)
 router.post('/updatecourse', [verifyToken], controllers.updateCourse)
 

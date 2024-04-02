@@ -1,2 +1,5 @@
 export {default as MemberLayout} from './MemberLayout'
 export {default as Personal} from './Personal'
+export {default as MyCourse} from './MyCourse'
+export {default as MySchedule} from './MySchedule'
+export {default as MyAssignment} from './MyAssignment'

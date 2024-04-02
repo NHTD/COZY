@@ -6,7 +6,7 @@ const InputFields = ({value, setValue, nameKey, type, invalidFields, setInvalidF
   // const [focus, setFocus] = useState(false)
 
   return (
-    <div className={clsx('w-full relative flex flex-col', fullWidth && 'w-full')}>
+    <div className={clsx('w-full relative flex flex-col', fullWidth && 'w-full', style)}>
       {!isHideLabel && value?.trim() !== '' && <label className='text-[10px] animate-slide-top-sm absolute top-0 left-[10px] block bg-white px-1' htmlFor={nameKey}>{nameKey?.slice(0, 1).toUpperCase() + nameKey.slice(1)}</label>}
       <input
         type={type || 'text'}

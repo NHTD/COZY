@@ -40,6 +40,9 @@ var userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    avatar: {
+        type: String,
+    },
     cart: [{
         course: {type: mongoose.Types.ObjectId, ref: 'Course'},
         addedAt: { type: Date, default: Date.now }

@@ -3,7 +3,7 @@ const controllers = require('../controllers/room')
 const {verifyToken, isAdmin, isTeacher} = require('../middlewares/verifyToken')
 const upload = require('../configs/cloudinary')
 
-router.post('/',[verifyToken, isTeacher], controllers.createRoom)
+router.post('/',[verifyToken, isAdmin], controllers.createRoom)
 router.post('/addUsers', [verifyToken, isTeacher], controllers.addUsersToRoom)
 router.get('/', [verifyToken, isTeacher], controllers.getAllRooms)
 router.delete('/deleteUser', [verifyToken, isTeacher], controllers.deleteUserFromRoom)

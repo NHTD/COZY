@@ -20,7 +20,10 @@ const path = {
 
     //MEMBER
     MEMBER: 'member',
-    PERSONAL: 'personal'
+    PERSONAL: 'personal',
+    MY_COURSE: 'my_course',
+    MY_SCHEDULE: 'my-schedule',
+    MY_ASSIGNMENT: 'my-assignment'
 }
 
 export default path;

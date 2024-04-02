@@ -34,6 +34,7 @@ const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {isLoggedIn, current, mes} = useSelector(state => state.user)
+    const [isOption, setIsOption] = useState(false)
     useEffect(() => {
         if(isLoggedIn){
             dispatch(getOne())
@@ -53,6 +54,21 @@ const Header = () => {
         setShowLogin(false)
     }
 
+    useEffect(() => {
+        const handleClickoutOptions = (e) => {
+            const selection = document.getElementById('selection')
+            if(!selection.contains(e.target)){
+                setIsOption(false)
+            }
+        }
+        document.addEventListener('click', handleClickoutOptions)
+
+        return () => {
+            document.removeEventListener('click', handleClickoutOptions)
+        }
+    }, [])
+    console.log(current.role)
+
   return (
     <div className='w-full bg-[#0A033C] h-[76px] pt-2.5 pb-2.5 flex justify-center items-center relative gap-8'>
         <Link to={`/${path.HOME}`} className='w-[205px] text-center'>
@@ -69,18 +85,33 @@ const Header = () => {
                     {menu.name}
                 </NavLink>
             ))}
-        </div> ư
+        </div>
 
         <div className='w-[205px] flex justify-center items-center gap-1'>
             
             {isLoggedIn && current
             ? <div className='w-full flex justify-center items-center gap-1'>
-                <Link className='text-white text-[16px]'
-                    to={+current?.role === 1 ? `/${path.ADMIN}/${path.DASHBOARD}` : +current?.role === 2 ? `/${path.TEACHER}` : `/${path.MEMBER}/${path.PERSONAL}`}
+                <div className='text-white text-[16px] relative cursor-pointer'
+                    // to={+current?.role === 1 ? `/${path.ADMIN}/${path.DASHBOARD}` : +current?.role === 2 ? `/${path.TEACHER}` : `/${path.MEMBER}/${path.PERSONAL}`}
+                    onClick={() => setIsOption(prev => !prev)}
+                    id='selection'
                 >
-                    {`${current?.last_name} ${current?.first_name}`}
-                </Link>
-                <span onClick={() => dispatch(logout())} className='text-white inline cursor-pointer hover-text-[700] hover:text-[#00ADEF]'><IoIosLogOut size={18}/></span>
+                    <span>{`${current?.last_name} ${current?.first_name}`}</span>
+                    {
+                        isOption 
+                        && 
+                        <div onClick={e => e.stopPropagation()} className='absolute top-[25px] left-0 bg-black border min-w-[200px] py-2 cursor-pointer flex flex-col z-50'>
+                            <Link className='p-2 hover:bg-sky-100 ' to={`/${path.MEMBER}/${path.PERSONAL}`}>User</Link>
+                            {
+                                +current.role === 1
+                                && 
+                                <Link className='p-2 hover:bg-sky-100 text-white' to={`/${path.ADMIN}/${path.DASHBOARD}`}>Admin</Link>
+                            }
+                            <span onClick={() => dispatch(logout())} className='text-white w-full hover:bg-sky-100 inline cursor-pointer hover-text-[700] hover:text-[#00ADEF] p-2'><IoIosLogOut size={18}/></span>
+                        </div>
+                    }
+
+                </div>
             </div>
             : 
             <button 

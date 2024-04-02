@@ -14,10 +14,6 @@ var courseSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    status:{
-        type:String, 
-        required:true,
-    },
     start_date:{
         type:String,
         required:true,
@@ -32,7 +28,8 @@ var courseSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
+        default: 'https://speedify.com/wp-content/uploads/no-disconnect.png'
+        // required:true,
     },
     // participants:[
     //     {

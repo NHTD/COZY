@@ -219,14 +219,19 @@ const getUserById = asyncHandler(async(req, res) => {
 
 const updateUser = asyncHandler(async(req, res) => {
     const {_id} = req.user
+    const file = req.file
     if(Object.keys(req.body).length === 0){
         throw new Error('Missing inputs')
+    }
+
+    if(file){
+        req.body.avatar = file?.path
     }
 
     const user = await User.findByIdAndUpdate(_id, req.body, {new: true})
     return res.status(200).json({
         status: user ? true : false,
-        msg: user ? 'Update is successful' : 'Can not update user. Something went wrong'
+        msg: user ? 'Update is successful' : 'Can not update '
     })
 })
 

@@ -3,7 +3,7 @@ import {Route, Routes} from 'react-router-dom';
 import path from './utils/path';
 import { Public, Login, Home, DetailCourse, ResetPassword } from './pages/public';
 import {AdminLayout, Dashboard, ManageCourses, ManageRooms, ManageSchedules, ManageUsers, CreateCourses} from './pages/admin'
-import {MemberLayout, Personal} from './pages/member'
+import {MemberLayout, Personal, MyAssignment, MyCourse, MySchedule} from './pages/member'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import TeacherLayout from './pages/teacher/TeacherLayout';
@@ -11,7 +11,7 @@ import TeacherLayout from './pages/teacher/TeacherLayout';
 function App() {
   return (
       <>
-        <Routes className="text-sm font-main min-h-screen">
+        <Routes className="text-sm font-main min-h-screen w-screen">
             <Route path={path.PUBLIC} element={<Public />}>
               <Route path={path.HOME} element={<Home />} />
               <Route path={path.DETAIL_COURSE_CID} element={<DetailCourse />} />
@@ -30,6 +30,9 @@ function App() {
             </Route>
             <Route path={path.MEMBER} element={<MemberLayout/>}>
               <Route path={path.PERSONAL} element={<Personal/>}/>
+              <Route path={path.MY_ASSIGNMENT} element={<MyAssignment/>}/>
+              <Route path={path.MY_COURSE} element={<MyCourse/>}/>
+              <Route path={path.MY_SCHEDULE} element={<MySchedule/>}/>
             </Route>
             <Route path={path.LOGIN} element={<Login />} />
         </Routes>

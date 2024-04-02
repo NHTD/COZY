@@ -22,7 +22,7 @@ export const adminSidebar = [
     {
         id: 3,
         type: 'parent',
-        text: 'Manage users',
+        text: 'Courses',
         icon: <FaBook/>,
         submenu:[
             {
@@ -56,5 +56,47 @@ export const roles = [
     {
         code: 3,
         value: 'User'
+    }
+]
+
+export const memberSidebar = [
+    {
+        id: 1,
+        type: 'single',
+        text: 'Personal',
+        path: `/${path.MEMBER}/${path.PERSONAL}`,
+        icon: <AiOutlineDashboard/>
+    },
+    {
+        id: 2,
+        type: 'single',
+        text: 'My courses',
+        path: `/${path.MEMBER}/${path.MY_COURSE}`,
+        icon: <MdGroup/>
+    },
+    {
+        id: 3,
+        type: 'single',
+        text: 'My schedule',
+        path: `/${path.MEMBER}/${path.MY_SCHEDULE}`,
+        icon: <FaBook/>,
+    },
+    {
+        id: 4,
+        type: 'single',
+        text: 'My assignment',
+        path: `/${path.MEMBER}/${path.MY_ASSIGNMENT}`,
+        icon: <GrSchedules/>
+    },
+]
+
+export const blockStatus = [
+    {
+        code: 0,
+        value: 'Active'
+    },
+    {
+        code: 1,
+        value: 'Block'
     }
 ]
