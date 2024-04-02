@@ -57,7 +57,7 @@ const Header = () => {
     useEffect(() => {
         const handleClickoutOptions = (e) => {
             const selection = document.getElementById('selection')
-            if(!selection.contains(e.target)){
+            if(!selection?.contains(e.target)){
                 setIsOption(false)
             }
         }
@@ -67,7 +67,6 @@ const Header = () => {
             document.removeEventListener('click', handleClickoutOptions)
         }
     }, [])
-    console.log(current.role)
 
   return (
     <div className='w-full bg-[#0A033C] h-[76px] pt-2.5 pb-2.5 flex justify-center items-center relative gap-8'>

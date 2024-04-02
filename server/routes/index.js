@@ -5,6 +5,7 @@ const assignment = require('./assignment')
 const tuition = require('./tuition')
 const order = require('./order')
 const course = require('./course')
+const courseCategory = require('./courseCategory')
 
 const initRoutes = app => {
     app.use('/api/user', user)
@@ -14,6 +15,7 @@ const initRoutes = app => {
     app.use('/api/tuition', tuition)
     app.use('/api/order', order)
     app.use('/api/course', course)
+    app.use('/api/courseCategory', courseCategory)
 }
 
 module.exports = initRoutes

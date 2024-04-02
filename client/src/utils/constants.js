@@ -26,21 +26,46 @@ export const adminSidebar = [
         icon: <FaBook/>,
         submenu:[
             {
-                text: 'Manage courses',
-                path: `/${path.ADMIN}/${path.MANAGE_COURSES}`
-            },
-            {
                 text: 'Create courses',
                 path: `/${path.ADMIN}/${path.CREATE_COURSES}`
+            },
+            {
+                text: 'Manage courses',
+                path: `/${path.ADMIN}/${path.MANAGE_COURSES}`
             }
         ]
     },
     {
         id: 4,
-        type: 'single',
-        text: 'Manage schedules',
-        path: `/${path.ADMIN}/${path.MANAGE_SCHEDULES}`,
-        icon: <GrSchedules/>
+        type: 'parent',
+        text: 'Schedules',
+        icon: <GrSchedules/>,
+        submenu: [
+            {
+                text: 'Manage schedules',
+                path: `/${path.ADMIN}/${path.MANAGE_SCHEDULES}`
+            },
+            {
+                text: 'Create schedules',
+                path: `/${path.ADMIN}/${path.CREATE_SCHEDULES}`
+            }
+        ]
+    },
+    {
+        id: 5,
+        type: 'parent',
+        text: 'Rooms',
+        icon: <GrSchedules/>,
+        submenu: [
+            {
+                text: 'Manage rooms',
+                path: `/${path.ADMIN}/${path.MANAGE_ROOMS}`
+            },
+            {
+                text: 'Create rooms',
+                path: `/${path.ADMIN}/${path.CREATE_ROOMS}`
+            }
+        ]
     },
 ]
 

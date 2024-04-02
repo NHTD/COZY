@@ -11,9 +11,11 @@ const path = {
     DASHBOARD: 'dashboard',
     MANAGE_USERS: 'manage-users',
     MANAGE_COURSES: 'manage-courses',
-    MANAGE_ROOMS: 'manage-rooms',
-    MANAGE_SCHEDULES: 'manage-schedules',
     CREATE_COURSES: 'create-courses',
+    MANAGE_ROOMS: 'manage-rooms',
+    CREATE_ROOMS: 'create-rooms',
+    MANAGE_SCHEDULES: 'manage-schedules',
+    CREATE_SCHEDULES: 'create-schedules',
 
     //Teacher
     TEACHER: 'teacher',

@@ -2,10 +2,6 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var courseSchema = new mongoose.Schema({
-    course_name:{
-        type:String,
-        required:true
-    },
     title:{
         type:String,
         required:true
@@ -31,6 +27,10 @@ var courseSchema = new mongoose.Schema({
         default: 'https://speedify.com/wp-content/uploads/no-disconnect.png'
         // required:true,
     },
+    category: {
+        type: mongoose.Types.ObjectId,
+        ref: 'courseCategory'
+    }
     // participants:[
     //     {
     //         type: mongoose.Types.ObjectId, 

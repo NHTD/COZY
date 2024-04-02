@@ -14,10 +14,10 @@ var scheduleSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    course: {
-        type: mongoose.Types.ObjectId,
-        ref: 'Course',
-    }
+    // course: {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: 'Course',
+    // }
 }, {
     timestamps: true    
 }); 

@@ -2,9 +2,9 @@ const asyncHandler = require('express-async-handler')
 const Course = require('../models/course')
 
 const createCourse = asyncHandler(async (req, res) => {
-    const {course_name, start_date, course_length, price, title, des} = req.body
+    const {start_date, course_length, price, title, des} = req.body
     const image = req.file.path
-    if(!course_name || !start_date || !course_length || !price || !title || !des){
+    if(!start_date || !course_length || !price || !title || !des){
         throw new Error('Missing inputs')
     }
     req.body.image = image

@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage'
 import courseSlice from './course/courseSlice'
 import scheduleSlice from './schedule/scheduleSlice';
 import userSlice from './user/userSlice';
+import categorySlice from './category/categorySlice';
 
 const commonConfig = {
     key: 'cozy/user',
@@ -19,7 +20,8 @@ export const store = configureStore({
     reducer:{
         course: courseSlice,
         schedule: scheduleSlice,
-        user: persistReducer(userConfig, userSlice)
+        user: persistReducer(userConfig, userSlice),
+        category: categorySlice
     },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

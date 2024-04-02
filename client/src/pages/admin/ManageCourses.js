@@ -1,19 +1,34 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { InputForm, Pagination } from '../../components'
 import { useForm } from 'react-hook-form'
-import { apiGetCourses, apiDeleteCourse } from '../../apis'
+import { apiGetCourses, apiDeleteCourse, apiGetCategories } from '../../apis'
 import moment from 'moment'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate , useSearchParams } from 'react-router-dom'
 import  useDebounce  from '../../hooks/useDebounce'
 import UpdateCourse from './UpdateCourse'
 import {toast} from 'react-toastify'
+import path from '../../utils/path'
 
 const ManageCourse = () => {
 
+  const navigate = useNavigate()
   const [courses, setCourses] = useState(null)
   const [counts, setCounts] = useState(0)
   const [editCourse, setEditCourse] = useState(null)
   const [update, setUpdate] = useState(false)
+  const [categories, setCategories] = useState(null)
+
+  const fetchGetCategory = async () => {
+    const response = await apiGetCategories();
+    if(response.status){
+      setCategories(response.msg)
+    }
+  }
+
+  useEffect(() => {
+    fetchGetCategory()
+  },[])
+
 
   const [params] = useSearchParams()
 
@@ -49,6 +64,10 @@ const ManageCourse = () => {
     }else{
       toast.error(deleteCourse.mes)
     }
+  }
+
+  const handleOnClick = () => {
+    navigate(`/${path.ADMIN}/${path.MANAGE_ROOMS}`)
   }
 
   return (
@@ -94,7 +113,7 @@ const ManageCourse = () => {
           {courses?.map((course, index) => (
             <tr className='border-b' key={course._id}>
               <td className='text-center'>{index+1}</td>
-              <td className='text-center'>{course.course_name}</td>
+              <td onClick={handleOnClick} className='text-center cursor-pointer hover:underline'>{categories?.find(el => el?._id === course?.category)?.title}</td>
               <td className='text-center'>{course.title}</td>
               <td className='text-center w-1/5'>{course.des}</td>
               <td className='text-center'>{course.start_date}</td>

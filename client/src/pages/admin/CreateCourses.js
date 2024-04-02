@@ -1,14 +1,32 @@
 import React, {useState, useEffect} from 'react'
-import { InputForm, Button } from '../../components'
+import { InputForm, Button, Select } from '../../components'
 import { useForm } from 'react-hook-form'
 import {useSelector, useDispatch} from 'react-redux'
 import { getBase64, validate } from '../../utils/helper'
-import { apiCreateCourse } from '../../apis'
+import { apiCreateCourse, apiGetCategories } from '../../apis'
 import {toast} from 'react-toastify'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment'
 
 const CreateCourses = () => {
-  const {courses} = useSelector(state => state.course)
-  const dispatch = useDispatch()
+
+  // const {categories} = useSelector(state => state.category)
+  // console.log(categories)
+  const [categories, setCategories] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null);
+  console.log(categories)
+
+  const fetchGetCategory = async () => {
+    const response = await apiGetCategories();
+    if(response.status){
+      setCategories(response.msg)
+    }
+  }
+
+  useEffect(() => {
+    fetchGetCategory()
+  },[])
 
   const {register, formState: {errors}, reset, handleSubmit, watch} = useForm()
   const [preview, setPreview] = useState({
@@ -16,21 +34,30 @@ const CreateCourses = () => {
   })
 
   const handleCreateCourse = async (data) => {
+    console.log(data)
     const formData = new FormData()
+    // if(data.category){
+    //   data.category = categories?.find(el => el._id === data.category)
+    //   
+    // }
     for(let i of Object.entries(data)){
-      console.log(i[0], i[1])
       formData.append(i[0], i[1])
+    }
+    if (selectedDate) { 
+      formData.append('start_date', moment(selectedDate).format("DD-MM-YYYY")); 
     }
     if(data.image){
       formData.append('image', data.image[0])
     } 
     const response = await apiCreateCourse(formData)
+    console.log(response)
     if(response.status){
       toast.success(response.mes)
     }else{
       toast.success(response.mes)
     }
   }
+  console.log(selectedDate)
   
   const handlePreviewImage = async (file) => {
     const base64Image = await getBase64(file)
@@ -55,17 +82,6 @@ const CreateCourses = () => {
       </h1>
       <div className='p-4'>
         <form onSubmit={handleSubmit(handleCreateCourse)}>
-          <InputForm
-            label='Course name'
-            register={register}
-            errors={errors}
-            id='course_name'
-            validate={{
-              required: 'Need fill this field'
-            }}
-            fullWidth
-            placeholder='Course name'
-          />
           <div className='w-full my-6 flex gap-4'>
             <InputForm
               label='Title'
@@ -104,7 +120,7 @@ const CreateCourses = () => {
               type='number'
               style='flex-auto'
             />
-            <InputForm
+            {/* <InputForm
               label='Start day'
               register={register}
               errors={errors}
@@ -115,7 +131,8 @@ const CreateCourses = () => {
               fullWidth={true}
               placeholder='start_date'
               style='flex-auto'
-            />
+            /> */}
+          
             <InputForm
               label='Course length'
               register={register}
@@ -126,6 +143,22 @@ const CreateCourses = () => {
               }}
               placeholder='course_length'
               // style='flex-auto'
+            />
+          </div>
+            <h4 className='mb-[6px]'>Start day</h4>
+            <DatePicker
+              selected={selectedDate}
+              onChange={date => setSelectedDate(date)}
+              format="DD-MM-YYYY"
+            />
+          <div>
+            <Select
+              label='Category'
+              options={categories?.map(category => ({code: category?._id, value: category?.title}))}
+              register={register}
+              id='category'
+              validate={{required: 'This field is required'}}
+              errors={errors}
             />
           </div>
           <div className='flex flex-col gap-2 mt-8'>
