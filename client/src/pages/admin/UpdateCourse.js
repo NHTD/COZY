@@ -4,10 +4,15 @@ import { getBase64 } from '../../utils/helper';
 import { InputForm, Button } from '../../components';
 import {toast} from 'react-toastify'
 import { apiUpdateCourse } from '../../apis';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment'
+
 
 const UpdateCourse = ({editCourse, render, setEditCourse}) => {
 
   const {register, handleSubmit, formState:{errors}, reset, watch} = useForm()
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const [preview, setPreview] = useState({
     image: ""
@@ -16,6 +21,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
   const handleUpdateCourse = async (data) => {
     const formData = new FormData()
     data.image = data?.image?.length===0 ? preview.image : data.image[0]
+    data.start_date = moment(selectedDate).format("DD-MM-YYYY")
     for(let i of Object.entries(data)){
       formData.append(i[0], i[1])
     }
@@ -65,11 +71,11 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
       <div className='h-[69px] w-full'></div>
       <div className='px-4 border-b bg-gray-100 flex justify-between items-center right-0 left-[327px] fixed top-0'>
         <h1 className='text-3xl font-bold tracking-tight'>Update courses</h1>
-        <span className='hover:underline cursor-pointer' onClick={() => setEditCourse(null)}>Test</span>
+        <span className='hover:underline cursor-pointer' onClick={() => setEditCourse(null)}>Back</span>
       </div>
       <div className='p-4'>
         <form onSubmit={handleSubmit(handleUpdateCourse)}>
-          <InputForm
+          {/* <InputForm
             label='Course name'
             register={register}
             errors={errors}
@@ -79,7 +85,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
             }}
             fullWidth
             placeholder='Course name'
-          />
+          /> */}
           <div className='w-full my-6 flex gap-4'>
             <InputForm
               label='Title'
@@ -118,7 +124,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
               type='number'
               style='flex-auto'
             />
-            <InputForm
+            {/* <InputForm
               label='Start day'
               register={register}
               errors={errors}
@@ -129,7 +135,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
               fullWidth={true}
               placeholder='start_date'
               style='flex-auto'
-            />
+            /> */}
             <InputForm
               label='Course length'
               register={register}
@@ -142,6 +148,12 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
               // style='flex-auto'
             />
           </div>
+          <h4 className='mb-[6px]'>Start day</h4>
+            <DatePicker
+              selected={selectedDate}
+              onChange={date => setSelectedDate(date)}
+              format="DD-MM-YYYY"
+            />
           <div className='flex flex-col gap-2 mt-8'>
               <label className='font-semibold' htmlFor='image'>Upload image</label>
               <input 

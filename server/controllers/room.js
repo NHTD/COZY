@@ -4,18 +4,20 @@ const User = require('../models/user')
 const Schedule = require('../models/schedule')
 
 const createRoom = asyncHandler(async (req, res) => {
-    const {_id} = req.user
-    const {room_name, capacity, location} = req.body
-    if(!room_name || !capacity || !location){
-        throw new Error('Missing inputs')
+    const { room_name, capacity, location, uid } = req.body; 
+    console.log({ room_name, capacity, location, uid })
+
+    if (!room_name || !capacity || !location || !uid) {
+        throw new Error('Missing inputs');
     }
 
-    const createRoom = await Room.create({room_name, capacity, location, users: _id})
+    const createdRoom = await Room.create(req.body);
+
     return res.status(200).json({
-        status: createRoom ? true : false,
-        mes: createRoom ? createRoom : 'Can not create room. Something went wrong'
-    })
-})
+        status: createdRoom ? true : false,
+        message: createdRoom ? 'Room created successfully' : 'Cannot create room. Something went wrong'
+    });
+});
 
 const getAllRooms = asyncHandler(async (req, res) => {
     const getRooms = await Room.find()
@@ -76,6 +78,34 @@ const addUsersToRoom  = asyncHandler(async (req, res) => {
     return res.status(200).json({ 
         success: true, 
         message: 'Users added to the room successfully.' 
+    });
+})
+
+const addTeacherToRoom  = asyncHandler(async (req, res) => {
+    const {uid, rid} = req.body
+
+    const room = await Room.findById(rid)
+    if(!room){
+        throw new Error('Room not found')
+    }
+
+    // const user = await User.find({_id: {$in: uid}, role: 'user'})
+    const user = await User.findById(uid)
+
+    if(user.role === 'teacher'){
+        if(room.users.includes(uid)){
+            throw new Error(`User with ID ${user._id} is already added to the room.`)
+        }else{
+            room.users.push(user._id)
+            await room.save()
+        }
+    }else{
+        throw new Error(`User with ID ${user._id} is not a regular user.`)
+    }
+
+    return res.status(200).json({ 
+        success: true, 
+        message: 'Teacher added to the room successfully.' 
     });
 })
 
@@ -186,5 +216,6 @@ module.exports = {
     deleteUserFromRoom,
     addScheduleToRoom,
     getAllStudentInRoom,
-    submitAssignment
+    submitAssignment,
+    addTeacherToRoom
 }

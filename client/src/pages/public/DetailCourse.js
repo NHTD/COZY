@@ -7,10 +7,7 @@ import { BsTelephone } from "react-icons/bs";
 
 const DetailCourse = () => {
     const { cid, course_name } = useParams()
-    const { sid } = useParams()
-    console.log(sid)
     const [course, setCourse] = useState(null)
-    const [schedule, setSchedule] = useState(null)
 
     const fetchCourseData = async() => {
         const response = await apiGetCourse(cid)
@@ -19,24 +16,11 @@ const DetailCourse = () => {
         }
     }
 
-    const fetchScheduleData = async() => {
-        const response = await apiGetSchedule(sid)
-        if(response.status){
-            setSchedule(response.mes)
-        }
-    }
-
     useEffect(() => {
         if(cid){
             fetchCourseData()
         }
     }, [cid])
-
-    useEffect(() => {
-        if(sid){
-            fetchScheduleData()
-        }
-    }, [sid])
 
   return (
     <div className='mb-[70px]'>
@@ -68,12 +52,12 @@ const DetailCourse = () => {
                         </button>
                         <ul className='w-[340px]'>
                             <li className='my-[10px] flex justify-between h-[36px] border-b outline-bot leading-[26px] font-medium'>
-                                <span className='text-[#6B7385] font-medium'>Ngày khai giảng</span>
+                                <span className='text-[#6B7385] font-medium'>Ngày bắt đầu</span>
                                 <span>{course?.start_date}</span>
                             </li>
                             <li className='my-[10px] flex justify-between h-[36px] leading-[26px] font-medium'>
-                                <span className='text-[#6B7385] font-medium'>Độ dài khóa học</span>
-                                <span>{course?.course_length}</span>
+                                <span className='text-[#6B7385] font-medium'>Ngày kết thúc</span>
+                                <span>{course?.end_date}</span>
                             </li>
                             {/* <li className='my-[10px] flex justify-between h-[36px] leading-[26px] font-medium'>
                                 <span className='text-[#6B7385] font-medium'>Giờ học</span>

@@ -70,6 +70,8 @@ const ManageCourse = () => {
     navigate(`/${path.ADMIN}/${path.MANAGE_ROOMS}`)
   }
 
+  console.log(courses)
+
   return (
     <div className='w-full flex flex-col gap-4 relative'>
       {editCourse && <div className='absolute inset-0 min-h-screen bg-gray-100 z-50'>
@@ -113,7 +115,7 @@ const ManageCourse = () => {
           {courses?.map((course, index) => (
             <tr className='border-b' key={course._id}>
               <td className='text-center'>{index+1}</td>
-              <td onClick={handleOnClick} className='text-center cursor-pointer hover:underline'>{categories?.find(el => el?._id === course?.category)?.title}</td>
+              <td onClick={handleOnClick} className='text-center cursor-pointer hover:underline'>{course?.course_name}</td>
               <td className='text-center'>{course.title}</td>
               <td className='text-center w-1/5'>{course.des}</td>
               <td className='text-center'>{course.start_date}</td>

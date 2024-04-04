@@ -20,8 +20,8 @@ const Home = () => {
           <h1 className='text-6xl h-[143px]'>28Tech - Become A Better Developer</h1>
           <p className='text-lg h-[52px]'>28Tech là đơn vị cung cấp những khóa học chất lượng cao về lập trình với mục tiêu lớn nhất là giúp các bạn sinh viên IT phát triển kiến thức, sự nghiệp !</p>
           <div className='flex gap-6 justify-center text-lg font-medium'>
-            <Link className='w-[171px] h-[60px] bg-[#00ADEF] rounded-md hover:bg-[#001C66] pt-[15px] hover:animate-slide-top'>Các khóa học</Link>
-            <Link className='w-[212px] h-[60px] bg-[#FFF] text-black rounded-md hover:bg-[#00ADEF] hover:text-white pt-[15px] hover:animate-slide-top'>Zalo: 0903566477</Link>
+            <Link className='w-[171px] h-[60px] bg-[#00ADEF] rounded-md hover:bg-[#001C66] pt-[15px] hover:animate-slide-top text-white no-underline'>Các khóa học</Link>
+            <Link className='w-[212px] h-[60px] bg-[#FFF] text-black rounded-md hover:bg-[#00ADEF] hover:text-white pt-[15px] hover:animate-slide-top no-underline'>Zalo: 0903566477</Link>
           </div>
       </div>
 

@@ -79,7 +79,7 @@ const Header = () => {
                 <NavLink 
                     key={menu.id} 
                     to={menu.path} 
-                    className={menu.id==='1' ? 'text-[#00ADEF]' : 'text-white hover:text-[#00ADEF]'}
+                    className={menu.id==='1' ? 'text-[#00ADEF]  no-underline' : 'text-white hover:text-[#00ADEF]  no-underline'}
                 >
                     {menu.name}
                 </NavLink>

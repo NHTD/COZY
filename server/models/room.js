@@ -15,14 +15,14 @@ var roomSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    course: {
+    course: { 
         type: mongoose.Types.ObjectId,
         ref: 'Course'
     },
-    schedule:{
-        type: mongoose.Types.ObjectId,
-        ref: 'Schedule'
-    },
+    // schedule:{
+    //     type: mongoose.Types.ObjectId,
+    //     ref: 'Schedule'
+    // },
     users: [
         {
             type: mongoose.Types.ObjectId,

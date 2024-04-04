@@ -1,31 +1,19 @@
 const asyncHandler = require('express-async-handler')
 const Schedule = require('../models/schedule')
-const Course = require('../models/course')
 
 const createSchedule = asyncHandler(async (req, res) => {
-    const {date, start_hour, end_hour, courseId} = req.body
+    const {date, room} = req.body
 
-    if(!date || !start_hour || !end_hour || !courseId){
+    console.log({date, room})
+    if(!date || !room){
         throw new Error('Missing inputs')
     }
 
-    const course = await Course.findById(courseId)
-    if (!course) {
-        throw new Error('Course not found')
-    }
-
-    const scheduleData = {
-        date,
-        start_hour,
-        end_hour,
-        course: courseId
-    }
-
-    const generateSchedule = await Schedule.create(scheduleData)
+    const generateSchedule = await Schedule.create(req.body)
 
     return res.status(200).json({
         status: generateSchedule ? true : false,
-        mes: generateSchedule ? generateSchedule : 'Can not create schedule. Something went wrong'
+        mes: generateSchedule ? 'Create is successful' : 'Can not create schedule. Something went wrong'
     })
 })
 const deleteSchedule = asyncHandler(async (req, res) => {

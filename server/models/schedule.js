@@ -18,6 +18,10 @@ var scheduleSchema = new mongoose.Schema({
     //     type: mongoose.Types.ObjectId,
     //     ref: 'Course',
     // }
+    room: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Room'
+    }
 }, {
     timestamps: true    
 }); 

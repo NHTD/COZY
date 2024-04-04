@@ -48,14 +48,14 @@ const FeatureCourse = () => {
         <Link
           key={course?._id}
           // onClick={() => handleSubmit(course)}
-          to={`/${course?._id}/${categories?.find(el => el?._id === course?.category)?.title}`}
+          to={`/${course?._id}/${course?.course_name}`}
         >
           <CourseCard 
             image={course?.image}
-            courseName={categories?.find(el => el?._id === course?.category)?.title}
+            courseName={course?.course_name}
             price={course?.price}
             startDay={course?.start_date}
-            courseLength={course?.course_length}
+            endDay={course?.end_date}
           />
         </Link>
       ))}
