@@ -1,152 +1,100 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { InputForm, Select, Button } from '../../components'
-import DatePicker from "react-datepicker";
-import { NavLink } from 'react-router-dom';
-import {Tab, Tabs} from 'react-bootstrap';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
-
-// const menus = [
-//   {
-//     id: 1,
-//     name: 'Teacher'
-//   },
-//   {
-//     id: 2,
-//     name: 'Schedule'
-//   },
-//   {
-//     id: 3,
-//     name: 'Study'
-//   },
-//   {
-//     id: 4,
-//     name: 'Exam'
-//   }
-// ]
+import moment from 'moment'
+import { apiGetRooms, apiGetAllUsers, apiGetCourses } from '../../apis'
 
 const CreateRooms = () => {
   const {register, handleSubmit, watch, formState: { errors }} = useForm()
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const [key, setKey] = useState('course');
+  const [rooms, setRooms] = useState(null)
+  const [users, setUsers] = useState(null)
+  const [courses, setCourses] = useState(null)
 
-  // const handleCreateRoom = (data) => {
-  //   console.log(data)
-  // }
+  const fetchApiGetUsers = async () => {
+    const response = await apiGetAllUsers()
+    console.log(response)
+    if(response.success){
+      setUsers(response.users)
+    }
+  }
+
+  const fetchApiGetRooms = async () => {
+    const response = await apiGetRooms()
+    console.log(response)
+    if(response.status){
+      setRooms(response.mes)
+    }
+  }
+
+  const fetchApiGetCourses = async () => {
+    const response = await apiGetCourses() 
+    if(response.status){
+      setCourses(response.mes)
+    }
+  }
+
+  useEffect(() => {
+    fetchApiGetCourses()
+  }, [])
+
+  useEffect(() => {
+    fetchApiGetRooms()
+  }, [])
+
+  useEffect(() => {
+    fetchApiGetUsers()
+  }, [])
+  console.log(courses)
 
   return (
-    <div className='w-full'>
-      <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
-        <span>Manage Room</span>
-      </h1>
-      <div className='flex flex-col items-center h-screen'>
-        <Tabs
-          id="controlled-tab-example"
-          variant="solid-rounded"
-          activeKey={key}
-          onSelect={(k) => setKey(k)}
-          className="mb-3 flex justify-around w-2/3"
-          fill
-        >
-          <Tab eventKey="course" title="Course">
-              <div className='w-[700px] bg-gray-100 min-h-[500px]'>
-                <div className='w-full my-6'>
-                  <InputForm
-                    label='Course'
-                    register={register}
-                    errors={errors}
-                    id='course'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Course'
-                    style='flex-auto'
-                  />
-                  <InputForm
-                    label='Description'
-                    register={register}
-                    errors={errors}
-                    id='des'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Description'
-                    style='flex-auto'
-                  />
-                  <InputForm
-                    label='Price'
-                    register={register}
-                    errors={errors}
-                    id='price'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Price'
-                    type='number'
-                    style='flex-auto'
-                  />
-                </div>
-              </div>
-            </Tab>  
-            <Tab eventKey="teacher" title="Teacher">
-              <div className='w-[700px] bg-gray-100 min-h-[500px]'>
-                <div className='w-full my-6'>
-                  <InputForm
-                    label='Title'
-                    register={register}
-                    errors={errors}
-                    id='title'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Title'
-                    // style={{color: 'red'}}
-                  />  
-                  <InputForm
-                    label='Description'
-                    register={register}
-                    errors={errors}
-                    id='des'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Description'
-                    style='flex-auto'
-                  />
-                  <InputForm
-                    label='Price'
-                    register={register}
-                    errors={errors}
-                    id='price'
-                    validate={{
-                      required: 'Need fill this field'
-                    }}
-                    fullWidth={true}
-                    placeholder='Price'
-                    type='number'
-                    style='flex-auto'
-                  />
-                </div>
-              </div>
-            </Tab>  
-            <Tab eventKey="schedule" title="Schedule" className='text-black'>
-            <div className='w-[700px] bg-gray-100 min-h-[500px]'>Schedule</div>
-            </Tab>
-            <Tab eventKey="study" title="Study" >
-            <div className='w-[700px] bg-gray-100 min-h-[500px]'>Study</div>
-            </Tab>
-            <Tab eventKey="exam" title="Exam">
-            <div className='w-[700px] bg-gray-100 min-h-[500px]'>Exam</div>
-            </Tab>
-        </Tabs>
+    <div className='w-full flex flex-col gap-4 relative'>
+      <div className='h-[69px] w-full'></div>
+      <div className='px-4 border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
+        <h1 className='text-3xl font-bold tracking-tight'>Manage rooms</h1>
       </div>
+      <div className='flex w-full justify-start items-center px-4'>
+        <form className='w-[45%]'>
+          <InputForm
+            id='q'
+            register={register}
+            errors={errors}
+            fullWidth
+            placeholder='Search rooms...'
+          />
+        </form>
+      </div>
+      <table className='table-auto'>
+        <thead>
+          <tr className='border bg-main text-white py-2'>
+            <th className='text-center py-2'>#</th>
+            <th className='text-center py-2'>Course name</th>
+            <th className='text-center py-2'>Room name</th>
+            <th className='text-center py-2'>Capacity</th>
+            <th className='text-center py-2'>Location</th>
+            <th className='text-center py-2'>Teacher</th>
+            <th className='text-center py-2'>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rooms?.map((room, index) => (
+            <tr className='border-b' key={room._id}>
+              <td className='text-center'>{index+1}</td>
+              {/* <td className='text-center cursor-pointer'>{courses?.find(course => course?._id === room?.course)}</td> */}
+              <td className='text-center cursor-pointer hover:underline'>{room?.room_name}</td>
+              <td className='text-center'>{room?.capacity}</td>
+              <td className='text-center w-1/5'>{room?.location}</td>
+              <td className='text-center'>{users?.find(user => user._id===room.teacher)?.first_name} {' '} {users?.find(user => user._id === room.teacher)?.last_name}</td>
+              <td className='text-center'>
+                <span className='hover:underline cursor-pointer px-1'>Edit</span>
+                <span className='hover:underline cursor-pointer px-1'>Remove</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {/* <div className='w-full flex justify-end my-8'>
+        <Pagination totalCount={counts}/>
+      </div> */}
     </div>
   )
 }

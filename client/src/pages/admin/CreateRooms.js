@@ -1,24 +1,31 @@
 import React, {useState, useEffect} from 'react'
 import { InputForm, Button, Select } from '../../components'
 import { useForm } from 'react-hook-form'
-import { apiCreateCourse, apiCreateRooms, apiGetCourses, apiGetSchedules, apiGetAllUsers } from '../../apis'
+import { apiCreateRooms, apiGetAllUsers, apiGetCourse } from '../../apis'
 import {toast} from 'react-toastify'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import {useParams} from 'react-router-dom'
 
-const CreateCourses = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
+const CreateRooms = () => {
   const [courses, setCourses] = useState(null)
   const [users, setUsers] = useState(null)
+  const {cid} = useParams()
 
-  const {register, formState: {errors}, reset, handleSubmit, watch} = useForm()
+  const {register, formState: {errors}, reset, handleSubmit} = useForm()
 
   const fetchUsers = async () => {
     const response = await apiGetAllUsers()
-    console.log(response)
     if(response.success){
       setUsers(response.users)
+    }
+  }
+
+  const fetchCourse = async () => {
+    const response = await apiGetCourse(cid)
+    if(response.status){
+      // setCourse(response.mes)
+      reset(response.mes)
     }
   }
   
@@ -26,27 +33,32 @@ const CreateCourses = () => {
     fetchUsers()
   }, []) 
 
-  const fetchCourses = async () => {
-    const response = await apiGetCourses()
-    if(response.status){
-      setCourses(response.mes)
-    }
-  }
-
   useEffect(() => {
-    fetchCourses()
-  }, [])
+    if(cid){
+      fetchCourse()
+    }
+  }, [cid])
+
 
   const handleCreateRoom = async (data) => {
-    const response = await apiCreateRooms(data)
-    console.log(response)
+    const requestData = {
+      room_name: data?.room_name,
+      capacity: data?.capacity,
+      location: data?.location,
+      teacher: data?.teacher,
+      course: cid
+    }
+    const response = await apiCreateRooms(requestData)
     if(response.status){
       toast.success(response.mes)
     }else{
       toast.success(response.mes)
     }
   }
-  
+
+  // useEffect(() => {
+  //   setValue('course_name', course?.course_name);
+  // })
   const filteredUsers = users?.filter(user => +user?.role === 2);
   return (
     <div className='w-full'>
@@ -56,6 +68,19 @@ const CreateCourses = () => {
       <div className='p-4'>
         <form onSubmit={handleSubmit(handleCreateRoom)}>
           <div className='w-full my-6 flex gap-4'>
+            <InputForm
+              label='Course name'
+              register={register}
+              errors={errors}
+              id='course_name'
+              validate={{
+                required: 'Need fill this field'
+              }}
+              fullWidth={true}
+              placeholder='Course name'
+              style='flex-auto'
+              readOnly
+            />
             <InputForm
               label='Room name'
               register={register}
@@ -93,7 +118,7 @@ const CreateCourses = () => {
               style='flex-auto'
             />
           </div>
-            <div className='mb-[20px]'>
+            {/* <div className='mb-[20px]'>
               <Select
                 label='Course'
                 options={courses?.map(course => ({code: course?._id, value: course?.course_name}))}
@@ -102,13 +127,13 @@ const CreateCourses = () => {
                 validate={{required: 'This field is required'}}
                 errors={errors}
               />
-            </div>
+            </div> */}
             <div>
               <Select
                 label='Teacher'
                 options={filteredUsers?.map(user => ({code: user?._id, value: `${user?.first_name} ${user?.last_name}`}))}
                 register={register}
-                id='uid'
+                id='teacher'
                 validate={{required: 'This field is required'}}
                 errors={errors}
               />
@@ -129,4 +154,4 @@ const CreateCourses = () => {
   )
 }
 
-export default CreateCourses
+export default CreateRooms

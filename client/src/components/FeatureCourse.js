@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react'
 // import { getCourses } from '../store/courses/asyncActions'
 import { apiGetCourses, apiGetCategories } from '../apis'
 import { CourseCard } from './index'
-import { Link, NavLink } from 'react-router-dom'
-import { apiGetSchedule } from '../apis'
-import { useLocation} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const FeatureCourse = () => {
   const [courses, setCourses] = useState(null)
@@ -13,7 +11,6 @@ const FeatureCourse = () => {
   // const {courses} = useSelector(state => state.course)
   // console.log(courses);
   // const navigate = useNavigate()
-  const { pathname } = useLocation();
 
   const fetchCategories = async () => {
     const response = await apiGetCategories()
@@ -28,7 +25,6 @@ const FeatureCourse = () => {
 
   const fetchCourses = async() => {
     const response = await apiGetCourses()
-    console.log(response);
     if(response.status){
       setCourses(response.mes)
     }

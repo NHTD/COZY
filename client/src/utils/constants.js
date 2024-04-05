@@ -58,12 +58,16 @@ export const adminSidebar = [
         icon: <GrSchedules/>,
         submenu: [
             {
+                text: 'Courses information',
+                path: `/${path.ADMIN}/${path.COURSES_INFORMATION}`
+            },
+            // {
+            //     text: 'Create rooms',
+            //     path: `/${path.ADMIN}//${path.CREATE_ROOMS}`
+            // },
+            {
                 text: 'Manage rooms',
                 path: `/${path.ADMIN}/${path.MANAGE_ROOMS}`
-            },
-            {
-                text: 'Create rooms',
-                path: `/${path.ADMIN}/${path.CREATE_ROOMS}`
             }
         ]
     },

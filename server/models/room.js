@@ -23,6 +23,10 @@ var roomSchema = new mongoose.Schema({
     //     type: mongoose.Types.ObjectId,
     //     ref: 'Schedule'
     // },
+    teacher: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User'  
+    },
     users: [
         {
             type: mongoose.Types.ObjectId,

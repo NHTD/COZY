@@ -3,11 +3,12 @@ import { InputForm, Pagination } from '../../components'
 import { useForm } from 'react-hook-form'
 import { apiGetCourses, apiDeleteCourse, apiGetCategories } from '../../apis'
 import moment from 'moment'
-import { useNavigate , useSearchParams } from 'react-router-dom'
+import { Link, useNavigate , useSearchParams } from 'react-router-dom'
 import  useDebounce  from '../../hooks/useDebounce'
 import UpdateCourse from './UpdateCourse'
 import {toast} from 'react-toastify'
 import path from '../../utils/path'
+import { useParams } from 'react-router-dom'
 
 const ManageCourse = () => {
 
@@ -17,7 +18,6 @@ const ManageCourse = () => {
   const [editCourse, setEditCourse] = useState(null)
   const [update, setUpdate] = useState(false)
   const [categories, setCategories] = useState(null)
-
   const fetchGetCategory = async () => {
     const response = await apiGetCategories();
     if(response.status){
@@ -66,11 +66,15 @@ const ManageCourse = () => {
     }
   }
 
-  const handleOnClick = () => {
-    navigate(`/${path.ADMIN}/${path.MANAGE_ROOMS}`)
-  }
+  // const handleOnClick = (courseName) => {
 
-  console.log(courses)
+  //   // <CreateRooms editCourse/>
+  //   navigate(`/${path.ADMIN}/${path.CREATE_ROOMS}?course_name=${courseName}`);
+  // }
+
+  const handleNavigate = (course) => {
+    navigate(`/${path.ADMIN}/${'create-rooms'}/${course?._id}`);
+  }
 
   return (
     <div className='w-full flex flex-col gap-4 relative'>
@@ -81,6 +85,13 @@ const ManageCourse = () => {
           setEditCourse={setEditCourse}
         />
       </div>}
+      {/* {editRooms && <div className='absolute inset-0 min-h-screen bg-gray-100 z-50'>
+        <CreateRooms 
+          editRooms={editRooms} 
+          render={render}
+          setEditRooms={setEditRooms}
+        />
+      </div>} */}
       <div className='h-[69px] w-full'></div>
       <div className='px-4 border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
         <h1 className='text-3xl font-bold tracking-tight'>Manage courses</h1>
@@ -115,7 +126,11 @@ const ManageCourse = () => {
           {courses?.map((course, index) => (
             <tr className='border-b' key={course._id}>
               <td className='text-center'>{index+1}</td>
-              <td onClick={handleOnClick} className='text-center cursor-pointer hover:underline'>{course?.course_name}</td>
+              {/* <Link
+                to={`/${path.ADMIN}/${'create-rooms'}/${course?._id}`}
+              > */}
+                <td onClick={() => handleNavigate(course)} className='text-center cursor-pointer hover:underline'>{course?.course_name}</td>
+              {/* </Link> */}
               <td className='text-center'>{course.title}</td>
               <td className='text-center w-1/5'>{course.des}</td>
               <td className='text-center'>{course.start_date}</td>

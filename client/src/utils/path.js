@@ -13,9 +13,10 @@ const path = {
     MANAGE_COURSES: 'manage-courses',
     CREATE_COURSES: 'create-courses',
     MANAGE_ROOMS: 'manage-rooms',
-    CREATE_ROOMS: 'create-rooms',
+    CREATE_ROOMS: 'create-rooms/:cid',
     MANAGE_SCHEDULES: 'manage-schedules',
     CREATE_SCHEDULES: 'create-schedules',
+    COURSES_INFORMATION: 'courses-information',
 
     //Teacher
     TEACHER: 'teacher',

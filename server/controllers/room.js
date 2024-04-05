@@ -4,10 +4,10 @@ const User = require('../models/user')
 const Schedule = require('../models/schedule')
 
 const createRoom = asyncHandler(async (req, res) => {
-    const { room_name, capacity, location, uid } = req.body; 
-    console.log({ room_name, capacity, location, uid })
+    const { room_name, capacity, location, teacher, course } = req.body; 
+    console.log({ room_name, capacity, location, teacher, course })
 
-    if (!room_name || !capacity || !location || !uid) {
+    if (!room_name || !capacity || !location || !teacher || !course) {
         throw new Error('Missing inputs');
     }
 

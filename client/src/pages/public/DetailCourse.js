@@ -8,6 +8,7 @@ import { BsTelephone } from "react-icons/bs";
 const DetailCourse = () => {
     const { cid, course_name } = useParams()
     const [course, setCourse] = useState(null)
+    console.log(cid)
 
     const fetchCourseData = async() => {
         const response = await apiGetCourse(cid)

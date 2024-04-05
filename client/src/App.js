@@ -2,7 +2,7 @@ import './App.css';
 import {Route, Routes} from 'react-router-dom';
 import path from './utils/path';
 import { Public, Login, Home, DetailCourse, ResetPassword } from './pages/public';
-import {AdminLayout, Dashboard, ManageCourses, ManageRooms, ManageSchedules, ManageUsers, CreateCourses, CreateRooms, CreateSchedules} from './pages/admin'
+import {AdminLayout, Dashboard, ManageCourses, ManageRooms, ManageSchedules, ManageUsers, CreateCourses, CreateRooms, CreateSchedules, CoursesInformation} from './pages/admin'
 import {MemberLayout, Personal, MyAssignment, MyCourse, MySchedule} from './pages/member'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,14 +18,15 @@ function App() {
               <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
             </Route>
             <Route path={path.ADMIN} element={<AdminLayout/>}>
-              <Route path={path.DASHBOARD} element={<Dashboard/>}/>
-              <Route path={path.MANAGE_COURSES} element={<ManageCourses/>}/>
-              <Route path={path.MANAGE_ROOMS} element={<ManageRooms/>}/>
-              <Route path={path.MANAGE_SCHEDULES} element={<ManageSchedules/>}/>
-              <Route path={path.MANAGE_USERS} element={<ManageUsers/>}/>
-              <Route path={path.CREATE_COURSES} element={<CreateCourses/>}/>
-              <Route path={path.CREATE_ROOMS} element={<CreateRooms/>}/>
-              <Route path={path.CREATE_SCHEDULES} element={<CreateSchedules/>}/>
+                  <Route path={path.DASHBOARD} element={<Dashboard/>}/>
+                  <Route path={path.MANAGE_COURSES} element={<ManageCourses/>}/>
+                  <Route path={path.MANAGE_ROOMS} element={<ManageRooms/>}/>
+                  <Route path={path.MANAGE_SCHEDULES} element={<ManageSchedules/>}/>
+                  <Route path={path.MANAGE_USERS} element={<ManageUsers/>}/>
+                  <Route path={path.CREATE_COURSES} element={<CreateCourses/>}/>
+                  <Route path={path.COURSES_INFORMATION} element={<CoursesInformation/>}/>
+                  <Route path={path.CREATE_ROOMS} element={<CreateRooms/>}/>  
+                  <Route path={path.CREATE_SCHEDULES} element={<CreateSchedules/>}/>
             </Route>
             <Route path={path.TEACHER} element={<TeacherLayout/>}>
                {/*Teacher pages*/}

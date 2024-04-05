@@ -10,7 +10,6 @@ import moment from 'moment'
 
 
 const UpdateCourse = ({editCourse, render, setEditCourse}) => {
-
   const {register, handleSubmit, formState:{errors}, reset, watch} = useForm()
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -75,7 +74,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
       </div>
       <div className='p-4'>
         <form onSubmit={handleSubmit(handleUpdateCourse)}>
-          {/* <InputForm
+          <InputForm
             label='Course name'
             register={register}
             errors={errors}
@@ -85,7 +84,7 @@ const UpdateCourse = ({editCourse, render, setEditCourse}) => {
             }}
             fullWidth
             placeholder='Course name'
-          /> */}
+          />
           <div className='w-full my-6 flex gap-4'>
             <InputForm
               label='Title'
