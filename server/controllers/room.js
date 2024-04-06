@@ -34,7 +34,7 @@ const updateRoomById = asyncHandler(async (req, res) => {
         throw new Error('Missing inputs')
     }
 
-    const updateRoom = await Room.findByIdAndDelete(rid)
+    const updateRoom = await Room.findByIdAndUpdate(rid, req.body, {new: true})
 
     return res.status(200).json({
         status: updateRoom ? true : false,
