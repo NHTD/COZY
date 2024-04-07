@@ -4,6 +4,8 @@ import { InputForm, Select, Button } from '../../components'
 import moment from 'moment'
 import { apiGetRooms, apiGetAllUsers, apiGetCourses, apiUpdateRoom, apiDeleteRoom } from '../../apis'
 import {toast} from 'react-toastify'
+import { Link } from 'react-router-dom'
+import path from '../../utils/path'
 
 const CreateRooms = () => {
   const {register, handleSubmit, watch, formState: { errors }, reset} = useForm()
@@ -138,7 +140,12 @@ const CreateRooms = () => {
                       style="flex-auto"
                     />
                     :
-                    <span className='text-center'>{room?.room_name}</span>
+                    <Link 
+                      className='text-center'
+                      to={`/${path.ADMIN}/${'rooms-information'}/${room?._id}`}
+                    >
+                      {room?.room_name}
+                    </Link>
                   }
                 </td>
                 <td className='py-2 px-4 text-center'>

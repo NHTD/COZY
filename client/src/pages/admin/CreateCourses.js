@@ -40,7 +40,7 @@ const CreateCourses = () => {
     if(response.status){
       toast.success(response.mes)
     }else{
-      toast.success(response.mes)
+      toast.error(response.mes)
     }
   }
   

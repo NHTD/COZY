@@ -8,7 +8,6 @@ import  useDebounce  from '../../hooks/useDebounce'
 import UpdateCourse from './UpdateCourse'
 import {toast} from 'react-toastify'
 import path from '../../utils/path'
-import { useParams } from 'react-router-dom'
 
 const ManageCourse = () => {
 
@@ -115,8 +114,8 @@ const ManageCourse = () => {
             <th className='text-center py-2'>Title</th>
             <th className='text-center py-2'>Description</th>
             <th className='text-center py-2'>Start day</th>
+            <th className='text-center py-2'>End day</th>
             <th className='text-center py-2'>Image</th>
-            <th className='text-center py-2'>Course length</th>
             <th className='text-center py-2'>Price</th>
             <th className='text-center py-2'>Created at</th>
             <th className='text-center py-2'>Action</th>
@@ -134,10 +133,10 @@ const ManageCourse = () => {
               <td className='text-center'>{course.title}</td>
               <td className='text-center w-1/5'>{course.des}</td>
               <td className='text-center'>{course.start_date}</td>
+              <td className='text-center'>{course.end_date}</td>
               <td className='text-center'>
                 <img src={course.image} alt='img' className='w-12 h-12 object-cover'/>
               </td>
-              <td className='text-center'>{course.course_length}</td>
               <td className='text-center'>{course.price}</td>
               <td className='text-center'>{moment(course.createdAt).format('DD/MM/YYYY')}</td>
               <td className='text-center'>

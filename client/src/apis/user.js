@@ -51,5 +51,3 @@ export const apiUpdateUser = (data) => axios({
     method: 'put',
     data
 })
-
-//updateuser

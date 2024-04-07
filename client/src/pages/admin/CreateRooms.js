@@ -50,9 +50,9 @@ const CreateRooms = () => {
     }
     const response = await apiCreateRooms(requestData)
     if(response.status){
-      toast.success(response.mes)
+      toast.success(response.message)
     }else{
-      toast.success(response.mes)
+      toast.error(response.message)
     }
   }
 

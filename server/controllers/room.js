@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Room = require('../models/room')
 const User = require('../models/user')
 const Schedule = require('../models/schedule')
+const mongoose = require('mongoose')
 
 const createRoom = asyncHandler(async (req, res) => {
     const { room_name, capacity, location, teacher, course } = req.body; 
@@ -28,18 +29,44 @@ const getAllRooms = asyncHandler(async (req, res) => {
     })
 })
 
-const updateRoomById = asyncHandler(async (req, res) => {
+const getRoomById = asyncHandler(async (req, res) =>{
     const {rid} = req.params
-    if(Object.keys(req.body).length === 0){
-        throw new Error('Missing inputs')
-    }
 
-    const updateRoom = await Room.findByIdAndUpdate(rid, req.body, {new: true})
+    const response = await Room.findById(rid)
 
     return res.status(200).json({
-        status: updateRoom ? true : false,
-        mes: updateRoom ? 'Updated room' : 'Cannot update room. Something went wrong'
+        status: response ? true : false,
+        mes: response ? response : 'Can not get room. Something went wrong'
     })
+})
+
+const updateRoomById = asyncHandler(async (req, res) => {
+    const { rid } = req.params;
+    const { userIds } = req.body;
+
+    // Kiểm tra xem có người dùng được gửi lên không
+    if (!userIds || userIds.length === 0) {
+        return res.status(400).json({ status: false, mes: 'No users provided' });
+    }
+
+    // Tìm kiếm phòng cần cập nhật
+    const room = await Room.findById(rid);
+
+    if (!room) {
+        return res.status(404).json({ status: false, mes: 'Room not found' });
+    }
+
+    // Thêm userIds vào trường users của phòng
+    room.users.push(...userIds);
+
+    // Lưu lại phòng đã cập nhật
+    const updatedRoom = await room.save();
+
+    return res.status(200).json({
+        status: true,
+        mes: 'Users added to room successfully',
+        updatedRoom
+    });
 })
 
 const deleteRoomById = asyncHandler(async (req, res) => {
@@ -54,25 +81,28 @@ const deleteRoomById = asyncHandler(async (req, res) => {
 })
 
 const addUsersToRoom  = asyncHandler(async (req, res) => {
-    const {uid, rid} = req.body
+    const { rid } = req.params;
+    const { userIds } = req.body;
 
-    const room = await Room.findById(rid)
-    if(!room){
-        throw new Error('Room not found')
+    const room = await Room.findById(rid);
+    if (!room) {
+        throw new Error('Room not found');
     }
 
-    // const user = await User.find({_id: {$in: uid}, role: 'user'})
-    const user = await User.findById(uid)
+    // Chuyển đổi các chuỗi ID người dùng thành đối tượng ObjectId
+    const userIdObjects = userIds.map(id => new mongoose.Types.ObjectId(id));
 
-    if(user.role === 'user'){
-        if(room.users.includes(uid)){
-            throw new Error(`User with ID ${user._id} is already added to the room.`)
-        }else{
-            room.users.push(user._id)
-            await room.save()
-        }
-    }else{
-        throw new Error(`User with ID ${user._id} is not a regular user.`)
+    // Kiểm tra xem mỗi ID người dùng trong userIdObjects đã tồn tại trong room.users chưa
+    const isNewUserAdded = userIdObjects.some(userId => !room.users.includes(userId));
+
+    if (!isNewUserAdded) {
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Users added to the room.' 
+        });
+    } else {
+        room.users.push(...userIdObjects);
+        await room.save();
     }
 
     return res.status(200).json({ 
@@ -217,5 +247,6 @@ module.exports = {
     addScheduleToRoom,
     getAllStudentInRoom,
     submitAssignment,
-    addTeacherToRoom
+    addTeacherToRoom,
+    getRoomById
 }

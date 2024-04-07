@@ -24,7 +24,7 @@ function App() {
                   <Route path={path.MANAGE_SCHEDULES} element={<ManageSchedules/>}/>
                   <Route path={path.MANAGE_USERS} element={<ManageUsers/>}/>
                   <Route path={path.CREATE_COURSES} element={<CreateCourses/>}/>
-                  <Route path={path.COURSES_INFORMATION} element={<CoursesInformation/>}/>
+                  <Route path={path.ROOMS_INFORMATION} element={<CoursesInformation/>}/>
                   <Route path={path.CREATE_ROOMS} element={<CreateRooms/>}/>  
                   <Route path={path.CREATE_SCHEDULES} element={<CreateSchedules/>}/>
             </Route>

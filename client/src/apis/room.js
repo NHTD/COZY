@@ -17,7 +17,18 @@ export const apiUpdateRoom = (data, rid) => axios({
     data
 })
 
+export const apiAddUserToRoom = (data, rid) => axios({
+    url: '/room/addUsers/'+rid,
+    method: 'put',
+    data
+})
+
 export const apiDeleteRoom = (rid) => axios({
     url: '/room/'+rid,
     method: 'delete'
+})
+
+export const apiGetRoomById = (rid) => axios({
+    url: '/room/'+rid,
+    method: 'get'
 })
