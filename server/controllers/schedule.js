@@ -4,10 +4,11 @@ const Schedule = require('../models/schedule')
 const createSchedule = asyncHandler(async (req, res) => {
     const {date, room} = req.body
 
-    console.log({date, room})
     if(!date || !room){
         throw new Error('Missing inputs')
     }
+
+    
 
     const generateSchedule = await Schedule.create(req.body)
 
@@ -16,6 +17,7 @@ const createSchedule = asyncHandler(async (req, res) => {
         mes: generateSchedule ? 'Create is successful' : 'Can not create schedule. Something went wrong'
     })
 })
+
 const deleteSchedule = asyncHandler(async (req, res) => {
     const {sid} = req.params
 

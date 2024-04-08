@@ -10,7 +10,7 @@ router.put('/deleteUser/:rid', [verifyToken, isAdmin], controllers.deleteUserFro
 router.put('/addUsers/:rid', [verifyToken, isAdmin], controllers.addUsersToRoom)
 router.get('/:rid', [verifyToken, isAdmin], controllers.getRoomById)
 router.put('/submit/:rid', [verifyToken], upload.array('files', 10), controllers.submitAssignment)
-router.put('/getAllStudentInRoom/:rid', [verifyToken, isTeacher], controllers.getAllStudentInRoom)
+router.put('/getAllStudentInRoom/:rid', [verifyToken, isAdmin], controllers.getAllStudentInRoom)
 router.put('/:rid', controllers.updateRoomById)
 router.delete('/:rid', controllers.deleteRoomById)
 

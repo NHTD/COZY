@@ -38,3 +38,8 @@ export const apiGetRoomById = (rid) => axios({
     url: '/room/'+rid,
     method: 'get'
 })
+
+export const apiGetAllStudentInRoom = (rid) => axios({
+    url: '/room/getAllStudentInRoom/'+rid,
+    method: 'put'
+})

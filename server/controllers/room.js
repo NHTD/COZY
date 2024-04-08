@@ -80,7 +80,7 @@ const addUsersToRoom  = asyncHandler(async (req, res) => {
     let isNewUserAdded = false;
     for (const userId of userIds) {
         if (!room.users.includes(userId)) {
-            isNewUserAdded = true;
+            isNewUserAdded = true; 
             room.users.push(userId);
         }
     }
@@ -120,7 +120,7 @@ const deleteUserFromRoom  = asyncHandler(async (req, res) => {
     }else{
         for(const userId of userIds){
             if(room.users.includes(userId)){
-                room.users.pop()
+                room.users.pop(userId)
                 await room.save()
             }
         }
@@ -143,8 +143,8 @@ const getAllStudentInRoom = asyncHandler(async (req, res) => {
     const usersInRoom = await User.find({ _id: { $in: room.users } }).select('first_name last_name email mobile');
 
     return res.status(200).json({ 
-        success: true, 
-        usersInRoom 
+        status: true, 
+        mes: usersInRoom 
     });
 })
 

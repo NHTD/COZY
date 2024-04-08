@@ -7,7 +7,7 @@
   import { BsHouseDoor } from "react-icons/bs";
   import { MdOutlineAssignment, MdGroup } from "react-icons/md";
   import { useParams } from 'react-router-dom';
-  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom, apiDeleteUserFromRoom } from '../../apis';
+  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom, apiDeleteUserFromRoom,apiGetAllStudentInRoom } from '../../apis';
   import moment from 'moment'
   import {toast} from 'react-toastify'
 
@@ -17,17 +17,20 @@
     const [users, setUsers] = useState(null)
     const [courses, setCourses] = useState(null)
     const [isLoaded, setIsLoaded] = useState(false)
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    console.log(selectedUsers)
+    const [selectedUsers, setSelectedUsers] = useState([])
+    const [studentInRooms, setStudentInRooms] = useState(null)
+    const [isVisible, setIsVisible] = useState(false)
 
     const {rid} = useParams()
+    console.log(studentInRooms)
 
     const fetchRoomAndUsers = () => {
       return Promise.all([
         apiGetRoomById(rid),
         apiGetAllUsers(),
         apiGetCourses(),
-        apiGetSchedules()
+        apiGetSchedules(),
+        apiGetAllStudentInRoom(rid)
       ]);
     }
 
@@ -36,13 +39,11 @@
   
     useEffect(() => {
       fetchRoomAndUsers()
-        .then(([roomResponse, usersResponse, coursesResponse, schedulesResponse]) => {
-          console.log(schedulesResponse.mes)
+        .then(([roomResponse, usersResponse, coursesResponse, schedulesResponse, studentRoomResponse]) => {
           if (roomResponse.status) {
             if(coursesResponse.status){
               if(schedulesResponse.status){
                 const { teacher, ...roomData } = roomResponse.mes;
-                console.log(roomData)
                 const teacherName = filterTeacher?.find(user => user?._id === teacher)?.first_name + " " + filterTeacher?.find(user => user?._id === teacher)?.last_name;
                 const coursesId = coursesResponse.mes?.find(el => el?._id === roomData?.course)
                 const scheduleValue = schedulesResponse.mes?.find(el => el?.room === roomData?._id)
@@ -68,12 +69,18 @@
                   end_hour: scheduleValue?.end_hour
                 }
                 reset({...resetValues, ...resetCourses,  ...resetSchedules})
+                setRoom(roomResponse.mes)
+                setIsLoaded(true)
               }
             }
           }
           if (usersResponse.success) {
-            setUsers(usersResponse.users);
-            setIsLoaded(true);
+            setUsers(usersResponse.users)
+            setIsLoaded(true)
+          }
+          if(studentRoomResponse.status){
+            setStudentInRooms(studentRoomResponse.mes)
+            setIsLoaded(true)
           }
         })
         .catch(error => {
@@ -144,26 +151,40 @@
     
     const handleAddUsersToRoom = async () => {
       const userData = { userIds: selectedUsers }; 
-      const response = await apiAddUserToRoom(userData, rid);
-      console.log(response);
-      if (response.status) {
-        toast.success(response.mes)
-      } else {
-        toast.error(response.mes)
-      }
+    const response = await apiAddUserToRoom(userData, rid);
+    const newUsers = users.filter(user => selectedUsers.includes(user._id));
+    if(newUsers.length > 0){
+      setIsVisible(true)
+    }
+    if (response.status) {
+      const updatedStudentInRooms = [...studentInRooms, ...newUsers];
+      setStudentInRooms(updatedStudentInRooms);
+      setIsLoaded(true);
+      toast.success(response.mes);
+  } else {
+      toast.error(response.mes);
+  }
     };
 
     const handleDeleteUsersFromRoom = async() => {
       const userData = { userIds: selectedUsers }; 
       const response = await apiDeleteUserFromRoom(userData, rid)
 
+      const updatedStudentInRooms = studentInRooms.filter(user => !selectedUsers.includes(user._id));
+      if(updatedStudentInRooms.length === 0){
+        setIsVisible(false)
+      }
       if(response.status){
+        setStudentInRooms(updatedStudentInRooms)
+        setIsLoaded(true)
         toast.success(response.mes)
       }else{
         toast.error(response.mes)
       }
     }
-    
+    console.log(room)
+    console.log(studentInRooms)
+
     return (
       <div className='w-full'>
         <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
@@ -431,6 +452,54 @@
                   />
                 }
               </form>
+              {
+                isVisible
+                &&
+                <table className='table-auto mb-6 text-left w-full'>
+                  <thead className='font-bold bg-gray-700 text-[13px] text-white'>
+                    <tr className='border border-gray-500'>
+                      <th className='px-4 py-2'>#</th>
+                      <th className='px-4 py-2'>First name</th>
+                      <th className='px-4 py-2'>Last name</th>
+                      <th className='px-4 py-2'>Email</th>
+                      <th className='px-4 py-2'>Mobile</th>
+                      <th className='px-4 py-2'>Address</th>
+                      <th className='px-4 py-2'>Status</th>
+                      <th className='px-4 py-2'>Created at</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {studentInRooms?.map((user, index) => (
+                      <tr key={user._id} className='border border-gray-500'>
+                        <td className='py-2 px-4'>{index+1}</td>
+                        <td className='py-2 px-4'>
+                          <span className='text-center'>{user?.first_name}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.last_name}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.email}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.mobile}</span> 
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.address}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user.isBlocked ? 'Blocked' : 'Active'}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{moment(user?.createdAt).format('DD-MM-YYYY')}</span>
+                        </td>
+                        
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              }
+             
             </Tabs.Item>
             <Tabs.Item title="assignments" icon={MdOutlineAssignment}>
               This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
