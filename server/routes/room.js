@@ -5,9 +5,8 @@ const upload = require('../configs/cloudinary')
 
 router.post('/',[verifyToken, isAdmin], controllers.createRoom)
 router.get('/', [verifyToken, isAdmin], controllers.getAllRooms)
-router.delete('/deleteUser', [verifyToken, isTeacher], controllers.deleteUserFromRoom)
-router.post('/addSchedule', [verifyToken, isTeacher], controllers.addScheduleToRoom)
 
+router.put('/deleteUser/:rid', [verifyToken, isAdmin], controllers.deleteUserFromRoom)
 router.put('/addUsers/:rid', [verifyToken, isAdmin], controllers.addUsersToRoom)
 router.get('/:rid', [verifyToken, isAdmin], controllers.getRoomById)
 router.put('/submit/:rid', [verifyToken], upload.array('files', 10), controllers.submitAssignment)

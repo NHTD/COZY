@@ -23,6 +23,12 @@ export const apiAddUserToRoom = (data, rid) => axios({
     data
 })
 
+export const apiDeleteUserFromRoom = (data, rid) => axios({
+    url: '/room/deleteUser/'+rid,
+    method: 'put',
+    data
+})
+
 export const apiDeleteRoom = (rid) => axios({
     url: '/room/'+rid,
     method: 'delete'

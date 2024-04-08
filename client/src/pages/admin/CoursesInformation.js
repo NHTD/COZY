@@ -7,7 +7,9 @@
   import { BsHouseDoor } from "react-icons/bs";
   import { MdOutlineAssignment, MdGroup } from "react-icons/md";
   import { useParams } from 'react-router-dom';
-  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom } from '../../apis';
+  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom, apiDeleteUserFromRoom } from '../../apis';
+  import moment from 'moment'
+  import {toast} from 'react-toastify'
 
   const CoursesInformation = () => {
     const {register, formState: {errors, isDirty}, handleSubmit, reset} = useForm()
@@ -16,6 +18,7 @@
     const [courses, setCourses] = useState(null)
     const [isLoaded, setIsLoaded] = useState(false)
     const [selectedUsers, setSelectedUsers] = useState([]);
+    console.log(selectedUsers)
 
     const {rid} = useParams()
 
@@ -140,26 +143,26 @@
     };
     
     const handleAddUsersToRoom = async () => {
-      try {
-        // Kiểm tra xem có người dùng nào được chọn không
-        if (selectedUsers.length === 0) {
-          console.error("No users selected to add to the room.");
-          return;
-        }
-    
-        // Nếu có người dùng được chọn, gửi yêu cầu cập nhật phòng
-        const userData = { userIds: selectedUsers }; // Đảm bảo tên field trùng với API endpoint
-        const response = await apiAddUserToRoom(userData, rid);
-        console.log(response);
-        if (response.status) {
-          console.log("Users added to room successfully!");
-        } else {
-          console.error("Failed to add users to room:", response.message);
-        }
-      } catch (error) {
-        console.error("Error adding users to room:", error);
+      const userData = { userIds: selectedUsers }; 
+      const response = await apiAddUserToRoom(userData, rid);
+      console.log(response);
+      if (response.status) {
+        toast.success(response.mes)
+      } else {
+        toast.error(response.mes)
       }
     };
+
+    const handleDeleteUsersFromRoom = async() => {
+      const userData = { userIds: selectedUsers }; 
+      const response = await apiDeleteUserFromRoom(userData, rid)
+
+      if(response.status){
+        toast.success(response.mes)
+      }else{
+        toast.error(response.mes)
+      }
+    }
     
     return (
       <div className='w-full'>
@@ -337,7 +340,7 @@
               </form>
             </Tabs.Item>
             <Tabs.Item title="users" icon={MdGroup}>
-              <div className="flex flex-col items-center">
+              {/* <div className="flex flex-col items-center">
                 <h2 className="text-xl font-semibold mb-4">Select Users</h2>
                 {users && (
                   <div className="grid grid-cols-2 gap-4">
@@ -357,7 +360,77 @@
                   name='Add User'
                   handleOnclick={handleAddUsersToRoom}
                 />
-              </div>
+              </div> */}
+              <form onSubmit={handleSubmit(handleAddUsersToRoom)}> 
+                <table className='table-auto mb-6 text-left w-full'>
+                  <thead className='font-bold bg-gray-700 text-[13px] text-white'>
+                    <tr className='border border-gray-500'>
+                      <th className='px-4 py-2'>#</th>
+                      <th className='px-4 py-2'>First name</th>
+                      <th className='px-4 py-2'>Last name</th>
+                      <th className='px-4 py-2'>Email</th>
+                      <th className='px-4 py-2'>Mobile</th>
+                      <th className='px-4 py-2'>Address</th>
+                      <th className='px-4 py-2'>Status</th>
+                      <th className='px-4 py-2'>Created at</th>
+                      <th className='px-4 py-2'>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users?.map((user, index) => (
+                      <tr key={user._id} className='border border-gray-500'>
+                        <td className='py-2 px-4'>{index+1}</td>
+                        <td className='py-2 px-4'>
+                          <span className='text-center'>{user?.first_name}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.last_name}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.email}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.mobile}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user?.address}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{user.isBlocked ? 'Blocked' : 'Active'}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span>{moment(user?.createdAt).format('DD-MM-YYYY')}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <input
+                            type="checkbox"
+                            onChange={() => handleUserSelect(user._id)}
+                            checked={selectedUsers.includes(user._id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {
+                  selectedUsers.length!==0
+                  && 
+                  <Button 
+                    name='Add User'
+                    handleOnclick={handleAddUsersToRoom}
+                    type='Submit'
+                  />
+                }
+                {
+                  selectedUsers.length!==0
+                  && 
+                  <Button 
+                    name='Delete User'
+                    handleOnclick={handleDeleteUsersFromRoom}
+                    type='Submit'
+                  />
+                }
+              </form>
             </Tabs.Item>
             <Tabs.Item title="assignments" icon={MdOutlineAssignment}>
               This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.

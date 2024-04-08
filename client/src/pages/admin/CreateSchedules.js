@@ -26,7 +26,7 @@ const CreateSchedules = () => {
     if(response.status){
       toast.success(response.mes)
     }else{
-      response.errors(response.mes)
+      toast.error(response.mes)
     }
   };
 

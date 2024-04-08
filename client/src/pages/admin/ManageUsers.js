@@ -89,7 +89,7 @@ const ManageUser = () => {
   }, [editItems])
 
   return (
-    <div className='w-full pl-8'>
+    <div className='w-full'>
       <h1 className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b'>
         <span>Manage Users</span>
       </h1>
@@ -130,14 +130,14 @@ const ManageUser = () => {
                   <td className='py-2 px-4'>
                     {editItems?._id===user?._id 
                     ? 
-                    <InputForm 
-                      register={register} 
-                      fullWidth errors={errors} 
-                      // defaultValue={user.first_name} 
-                      id={'first_name'} 
-                      validate={{
-                        required: 'Require fill'  
-                      }}/> 
+                      <InputForm 
+                        register={register} 
+                        fullWidth errors={errors} 
+                        // defaultValue={user.first_name} 
+                        id={'first_name'} 
+                        validate={{
+                          required: 'Require fill'  
+                        }}/> 
                     : 
                     <span>{user.first_name}</span>}
                   </td>
