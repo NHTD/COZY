@@ -11,7 +11,7 @@ import avatar from '../assets/avatar.png'
 const activedStyle = 'px-4 py-2 flex items-center gap-2 bg-[#05ADEF]'
 const notActivedStyle = 'px-4 py-2 flex items-center gap-2 hover:bg-[#05ADEF]'
 
-const MemberSidebar = () => {
+const TeacherSidebar = () => {
 
   const {current} = useSelector(state => state.user)  
   const [actived, setActived] = useState([])
@@ -80,4 +80,4 @@ const MemberSidebar = () => {
   )
 }
 
-export default memo(MemberSidebar)
+export default memo(TeacherSidebar)

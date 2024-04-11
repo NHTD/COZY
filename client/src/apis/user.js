@@ -51,3 +51,8 @@ export const apiUpdateUser = (data) => axios({
     method: 'put',
     data
 })
+
+export const apiGetUserById = (uid) => axios({
+    url: '/user/getOne/'+uid,
+    method: 'get'
+})

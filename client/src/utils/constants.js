@@ -71,6 +71,13 @@ export const adminSidebar = [
             }
         ]
     },
+    {
+        id: 6,
+        type: 'single',
+        text: 'Create assignment',
+        path: `/${path.ADMIN}/${path.CREATE_ASSIGNMENT}`,
+        icon: <MdGroup/>
+    },
 ]
 
 export const roles = [
@@ -98,24 +105,53 @@ export const memberSidebar = [
     },
     {
         id: 2,
+        type: 'parent',
+        text: 'Rooms',
+        icon: <GrSchedules/>,
+        submenu: [
+            {
+                text: 'My rooms',
+                path: `/${path.MEMBER}/${path.MY_ROOMS}`,
+            },
+            // {
+            //     text: 'My schedule',
+            //     path: `/${path.MEMBER}/${path.MY_SCHEDULE}`,
+            // },
+            {
+                text: 'My assignment',
+                path: `/${path.MEMBER}/${path.MY_ASSIGNMENT}`,
+            }
+        ]
+    },
+]
+
+export const teacherSidebar = [
+    {
+        id: 1,
         type: 'single',
-        text: 'My courses',
-        path: `/${path.MEMBER}/${path.MY_COURSE}`,
-        icon: <MdGroup/>
+        text: 'Personal',
+        path: `/${path.TEACHER}/${path.PERSONAL}`,
+        icon: <AiOutlineDashboard/>
     },
     {
-        id: 3,
-        type: 'single',
-        text: 'My schedule',
-        path: `/${path.MEMBER}/${path.MY_SCHEDULE}`,
-        icon: <FaBook/>,
-    },
-    {
-        id: 4,
-        type: 'single',
-        text: 'My assignment',
-        path: `/${path.MEMBER}/${path.MY_ASSIGNMENT}`,
-        icon: <GrSchedules/>
+        id: 2,
+        type: 'parent',
+        text: 'Rooms',
+        icon: <GrSchedules/>,
+        submenu: [
+            {
+                text: 'My rooms',
+                path: `/${path.MEMBER}/${path.MY_ROOMS}`,
+            },
+            // {
+            //     text: 'My schedule',
+            //     path: `/${path.MEMBER}/${path.MY_SCHEDULE}`,
+            // },
+            {
+                text: 'My assignment',
+                path: `/${path.MEMBER}/${path.MY_ASSIGNMENT}`,
+            }
+        ]
     },
 ]
 

@@ -61,7 +61,7 @@ const login = asyncHandler(async(req, res) => {
 const getAllUsers = asyncHandler(async(req, res) => {
     const queries = {...req.query}
     const excludeFields = ['limit', 'sort', 'page', 'fields']
-    excludeFields.forEach(el => delete queries[el])
+    excludeFields.forEach(el => delete  queries[el])
 
     let queryString = JSON.stringify(queries)
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchedEl => `$${matchedEl}`)

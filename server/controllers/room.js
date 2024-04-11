@@ -1,11 +1,11 @@
 const asyncHandler = require('express-async-handler')
 const Room = require('../models/room')
 const User = require('../models/user')
-const Schedule = require('../models/schedule')
+// const Schedule = require('../models/schedule')
+const Assignment = require('../models/assignment')
 
 const createRoom = asyncHandler(async (req, res) => {
     const { room_name, capacity, location, teacher, course } = req.body; 
-    console.log({ room_name, capacity, location, teacher, course })
 
     if (!room_name || !capacity || !location || !teacher || !course) {
         throw new Error('Missing inputs');
@@ -148,26 +148,84 @@ const getAllStudentInRoom = asyncHandler(async (req, res) => {
     });
 })
 
-const submitAssignment = asyncHandler(async (req, res) => {
-    const {_id} = req.user
+const getAllAssignmentInRoom = asyncHandler(async(req, res) => {
     const {rid} = req.params
-    
-    if(!req.files){
-        throw new Error('Missing inputs')
-    }
 
     const room = await Room.findById(rid)
-    const isExistedUser = room?.users?.find(u => u._id.toString() === _id.toString())
-    if(isExistedUser){
-        const submitFiles = await Room.findByIdAndUpdate(rid, {$push: {files: {$each: req.files.map(el => el.path)}}}, {new: true})
+    if(!room){
         return res.status(200).json({
-            status: submitFiles ? true : false,
-            mes: submitFiles ? submitFiles : 'Can not send file'
+            status: false,
+            mes: 'Room is not found'
         })
-    }else{
-        throw new Error('User not found in this room')
     }
+
+    const response = await Assignment.find({_id: {$in: room.assignments}})
+
+    return res.status(200).json({
+        status: response ? true : false,
+        mes: response ? response : 'Can not get all assignments in this room'
+    })
 })
+  
+
+// const submitAssignment = asyncHandler(async (req, res) => {
+//     const {_id} = req.user
+//     const {rid} = req.params
+    
+//     if(!req.files){
+//         throw new Error('Missing inputs')
+//     }
+
+//     const room = await Room.findById(rid)
+//     const isExistedUser = room?.users?.find(u => u._id.toString() === _id.toString())
+//     if(isExistedUser){
+//         const submitFiles = await Room.findByIdAndUpdate(rid, {$push: {files: {$each: req.files.map(el => el.path)}}}, {new: true})
+//         return res.status(200).json({
+//             status: submitFiles ? true : false,
+//             mes: submitFiles ? submitFiles : 'Can not send file'
+//         })
+//     }else{
+//         throw new Error('User not found in this room')
+//     }
+// })
+
+// const submitAssignment = asyncHandler(async (req, res) => {
+//     const assignmentId = req.params.assignmentId;
+//     const submissionText = req.body.submissionText;
+//     const files = req.files;
+
+//     const result = await Assignment.updateOne(
+//       { _id: assignmentId },
+//       { $push: { 
+//           submit: {
+//             $each: files.map(file => ({
+//               postedBy: req.user,
+//               comment: submissionText,
+//               file: file.path
+//             }))
+//           } 
+//         } 
+//       }
+//     );
+
+//     if (result.nModified > 0) {
+//       res.status(200).json({ message: 'Assignment submitted successfully' });
+//     } else {
+//       res.status(404).json({ error: 'Assignment not found' });
+//     }
+// });
+
+const getUserInRoom = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const response = await Room.find({ users: _id });
+
+    return res.status(200).json({
+        status: response ? true : false,
+        mes: response ? response : 'User is not found'
+    });
+})      
+
+
 
 module.exports = {
     createRoom,
@@ -177,6 +235,7 @@ module.exports = {
     addUsersToRoom,
     deleteUserFromRoom,
     getAllStudentInRoom,
-    submitAssignment,
-    getRoomById
+    getRoomById,
+    getAllAssignmentInRoom,
+    getUserInRoom
 }

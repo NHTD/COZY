@@ -6,10 +6,11 @@
   import { GrSchedules } from "react-icons/gr";
   import { BsHouseDoor } from "react-icons/bs";
   import { MdOutlineAssignment, MdGroup } from "react-icons/md";
-  import { useParams } from 'react-router-dom';
-  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom, apiDeleteUserFromRoom,apiGetAllStudentInRoom } from '../../apis';
+  import { Link, useParams } from 'react-router-dom';
+  import { apiGetRoomById, apiGetAllUsers, apiGetCourses, apiGetSchedules, apiAddUserToRoom, apiDeleteUserFromRoom,apiGetAllStudentInRoom, apiGetAllAssignmentInRoom } from '../../apis';
   import moment from 'moment'
   import {toast} from 'react-toastify'
+import path from '../../utils/path';
 
   const CoursesInformation = () => {
     const {register, formState: {errors, isDirty}, handleSubmit, reset} = useForm()
@@ -19,10 +20,11 @@
     const [isLoaded, setIsLoaded] = useState(false)
     const [selectedUsers, setSelectedUsers] = useState([])
     const [studentInRooms, setStudentInRooms] = useState(null)
+    const [assignmentInRoom, setAssignmentInRoom] = useState(null)
     const [isVisible, setIsVisible] = useState(false)
+    console.log(assignmentInRoom)
 
     const {rid} = useParams()
-    console.log(studentInRooms)
 
     const fetchRoomAndUsers = () => {
       return Promise.all([
@@ -30,7 +32,8 @@
         apiGetAllUsers(),
         apiGetCourses(),
         apiGetSchedules(),
-        apiGetAllStudentInRoom(rid)
+        apiGetAllStudentInRoom(rid),
+        apiGetAllAssignmentInRoom(rid)
       ]);
     }
 
@@ -39,7 +42,7 @@
   
     useEffect(() => {
       fetchRoomAndUsers()
-        .then(([roomResponse, usersResponse, coursesResponse, schedulesResponse, studentRoomResponse]) => {
+        .then(([roomResponse, usersResponse, coursesResponse, schedulesResponse, studentRoomResponse, assignmentRoomResponse]) => {
           if (roomResponse.status) {
             if(coursesResponse.status){
               if(schedulesResponse.status){
@@ -82,9 +85,13 @@
             setStudentInRooms(studentRoomResponse.mes)
             setIsLoaded(true)
           }
+          if(assignmentRoomResponse.status){
+            setAssignmentInRoom(assignmentRoomResponse.mes)
+            setIsLoaded(true)
+          }
         })
         .catch(error => {
-          console.error("Error fetching room and users:", error);
+          console.error("Error fetching data:", error);
         });
     }, [isLoaded]);
     
@@ -151,19 +158,19 @@
     
     const handleAddUsersToRoom = async () => {
       const userData = { userIds: selectedUsers }; 
-    const response = await apiAddUserToRoom(userData, rid);
-    const newUsers = users.filter(user => selectedUsers.includes(user._id));
-    if(newUsers.length > 0){
-      setIsVisible(true)
-    }
-    if (response.status) {
-      const updatedStudentInRooms = [...studentInRooms, ...newUsers];
-      setStudentInRooms(updatedStudentInRooms);
-      setIsLoaded(true);
-      toast.success(response.mes);
-  } else {
-      toast.error(response.mes);
-  }
+      const response = await apiAddUserToRoom(userData, rid);
+      const newUsers = users.filter(user => selectedUsers.includes(user._id));
+      if(newUsers.length > 0){
+        setIsVisible(true)
+      }
+      if (response.status) {
+        const updatedStudentInRooms = [...newUsers];
+        setStudentInRooms(updatedStudentInRooms);
+        setIsLoaded(true);
+        toast.success(response.mes);
+      } else {
+          toast.error(response.mes);
+      }
     };
 
     const handleDeleteUsersFromRoom = async() => {
@@ -382,7 +389,6 @@
                   handleOnclick={handleAddUsersToRoom}
                 />
               </div> */}
-              <form onSubmit={handleSubmit(handleAddUsersToRoom)}> 
                 <table className='table-auto mb-6 text-left w-full'>
                   <thead className='font-bold bg-gray-700 text-[13px] text-white'>
                     <tr className='border border-gray-500'>
@@ -433,25 +439,30 @@
                     ))}
                   </tbody>
                 </table>
-                {
-                  selectedUsers.length!==0
-                  && 
-                  <Button 
-                    name='Add User'
-                    handleOnclick={handleAddUsersToRoom}
-                    type='Submit'
-                  />
-                }
-                {
-                  selectedUsers.length!==0
-                  && 
-                  <Button 
-                    name='Delete User'
-                    handleOnclick={handleDeleteUsersFromRoom}
-                    type='Submit'
-                  />
-                }
-              </form>
+                <div className='flex gap-4'>
+                  <div>
+                    {
+                      selectedUsers.length!==0
+                      && 
+                      <Button 
+                        name='Add User'
+                        handleOnclick={handleAddUsersToRoom}
+                        type='Submit'
+                      />
+                    }
+                  </div>
+                  <div>
+                    {
+                      selectedUsers.length!==0
+                      && 
+                      <Button 
+                        name='Delete User'
+                        handleOnclick={handleDeleteUsersFromRoom}
+                        type='Submit'
+                      />
+                    }
+                  </div>
+                </div>
               {
                 isVisible
                 &&
@@ -502,9 +513,37 @@
              
             </Tabs.Item>
             <Tabs.Item title="assignments" icon={MdOutlineAssignment}>
-              This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
-              Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-              control the content visibility and styling.
+              <table className='table-auto mb-6 text-left w-full'>
+                  <thead className='font-bold bg-gray-700 text-[13px] text-white'>
+                    <tr className='border border-gray-500'>
+                      <th className='px-4 py-2'>#</th>
+                      <th className='px-4 py-2'>Assignment name</th>
+                      <th className='px-4 py-2'>Description</th>
+                      <th className='px-4 py-2'>Deadline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {assignmentInRoom?.map((el, index) => (
+                      <tr key={el._id} className='border border-gray-500'>
+                        <td className='py-2 px-4'>{index+1}</td>
+                        <td className='py-2 px-4'>
+                          <Link 
+                            className='text-center'
+                            to={`/${path.ADMIN}/${'assignment-information'}/${rid}`}
+                          >
+                            {el?.assignment_name}
+                          </Link>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span className='text-center'>{el?.description}</span>
+                        </td>
+                        <td className='py-2 px-4'>
+                          <span className='text-center'>{el?.deadline}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
             </Tabs.Item>
         </Tabs>
         </div>

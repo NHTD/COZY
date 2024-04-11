@@ -17,6 +17,8 @@ const path = {
     MANAGE_SCHEDULES: 'manage-schedules',
     CREATE_SCHEDULES: 'create-schedules',
     ROOMS_INFORMATION: 'rooms-information/:rid',
+    CREATE_ASSIGNMENT: 'create-assignment',
+    ASSIGNMENT_INFORMATION: 'assignment-information/:rid',
 
     //Teacher
     TEACHER: 'teacher',
@@ -25,8 +27,10 @@ const path = {
     MEMBER: 'member',
     PERSONAL: 'personal',
     MY_COURSE: 'my_course',
-    MY_SCHEDULE: 'my-schedule',
-    MY_ASSIGNMENT: 'my-assignment'
+    MY_SCHEDULE: 'my-schedule/:rid',
+    MY_ASSIGNMENT: 'my-assignment',
+    MY_ROOMS: 'my-rooms',
+    MY_SUBMIT: 'my-submit/:aid'
 }
 
 export default path;

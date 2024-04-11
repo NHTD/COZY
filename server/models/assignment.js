@@ -14,18 +14,17 @@ var assignmentSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    room:[
+    room: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Room'
+    },
+    submit:[
         {
-            type:mongoose.Types.ObjectId,
-            ref: 'Room'
+            postedBy: {type: mongoose.Types.ObjectId, ref: 'User'},
+            comment: {type: String},
+            files: [{ type: String }]
         }
-    ],
-    // submittedBy:[
-    //     {
-    //         postedBy: {type: mongoose.Types.ObjectId, ref: 'User'},
-    //         files: {type: Array}
-    //     }
-    // ]
+    ]
 }, {
     timestamps: true
 });

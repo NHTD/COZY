@@ -43,3 +43,13 @@ export const apiGetAllStudentInRoom = (rid) => axios({
     url: '/room/getAllStudentInRoom/'+rid,
     method: 'put'
 })
+
+export const apiGetAllAssignmentInRoom = (rid) => axios({
+    url: '/room/getAllAssignment/'+rid,
+    method: 'get'
+})
+
+export const apiGetUserInRoom = () => axios({
+    url: '/room/getUserInRoom',
+    method: 'get'
+})

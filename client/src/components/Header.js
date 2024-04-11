@@ -100,11 +100,25 @@ const Header = () => {
                         isOption 
                         && 
                         <div onClick={e => e.stopPropagation()} className='absolute top-[25px] left-0 bg-black border min-w-[200px] py-2 cursor-pointer flex flex-col z-50'>
-                            <Link className='p-2 hover:bg-sky-100 ' to={`/${path.MEMBER}/${path.PERSONAL}`}>User</Link>
+                            {/* <Link className='p-2 hover:bg-sky-100 ' to={`/${path.MEMBER}/${path.PERSONAL}`}>User</Link> */}
+                            {
+                                +current.role === 3
+                                && 
+                                <Link className='p-2 hover:bg-sky-100 ' to={`/${path.MEMBER}/${path.PERSONAL}`}>User</Link>
+                            }
+                            {
+                                +current.role === 2
+                                && 
+                                <Link className='p-2 hover:bg-sky-100 text-white' to={`/${path.TEACHER}/${path.PERSONAL}`}>Teacher</Link>
+                            }
                             {
                                 +current.role === 1
                                 && 
-                                <Link className='p-2 hover:bg-sky-100 text-white' to={`/${path.ADMIN}/${path.DASHBOARD}`}>Admin</Link>
+                                <>
+                                    <Link className='p-2 hover:bg-sky-100 text-white' to={`/${path.ADMIN}/${path.DASHBOARD}`}>Admin</Link>
+                                    <Link className='p-2 hover:bg-sky-100 ' to={`/${path.MEMBER}/${path.PERSONAL}`}>User</Link>
+                                    <Link className='p-2 hover:bg-sky-100 text-white' to={`/${path.TEACHER}/${path.PERSONAL}`}>Teacher</Link>
+                                </>
                             }
                             <span onClick={() => dispatch(logout())} className='text-white w-full hover:bg-sky-100 inline cursor-pointer hover-text-[700] hover:text-[#00ADEF] p-2'><IoIosLogOut size={18}/></span>
                         </div>

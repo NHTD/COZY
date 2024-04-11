@@ -62,7 +62,6 @@ const CreateRooms = () => {
   useEffect(() => {
     fetchApiGetCourses()
   }, [])
-
   useEffect(() => {
     fetchApiGetRooms()
   }, [update])
@@ -87,9 +86,8 @@ const CreateRooms = () => {
 
   const filteredUsers = users?.filter(user => +user?.role === 2)
   return (
-    <div className='w-full flex flex-col gap-4 relative'>
-      <div className='h-[69px] w-full'></div>
-      <div className='px-4 border-b w-full bg-gray-100 flex justify-between items-center fixed top-0'>
+    <div className='w-full flex flex-col gap-4'>
+      <div className='h-[75px] flex justify-between items-center text-3xl font-bold px-4 border-b bg-gray-200 text-black'>
         <h1 className='text-3xl font-bold tracking-tight'>Manage rooms</h1>
       </div>
       <div className='flex w-full justify-start items-center px-4'>
@@ -123,9 +121,9 @@ const CreateRooms = () => {
           <tbody>
             {rooms?.map((room, index) => (
               <tr className='border-b' key={room._id}>
-                <td className='text-center'>{index+1}</td>
-                <td className='text-center cursor-pointer'>{courses?.find(course => course?._id === room?.course)?.course_name}</td>
-                <td className='py-2 px-4 text-center'>
+                <td className=' py-2 px-4 '>{index+1}</td>
+                <td className=' py-2 px-4 '>{courses?.find(course => course?._id === room?.course)?.course_name}</td>
+                <td className='py-2 px-4'>
                   {
                     editRooms?._id === room?._id
                     ?
@@ -141,14 +139,14 @@ const CreateRooms = () => {
                     />
                     :
                     <Link 
-                      className='text-center'
+                      className='text-main underline'
                       to={`/${path.ADMIN}/${'rooms-information'}/${room?._id}`}
                     >
                       {room?.room_name}
                     </Link>
                   }
                 </td>
-                <td className='py-2 px-4 text-center'>
+                <td className='py-2 px-4 '>
                   {
                     editRooms?._id === room?._id
                     ?
@@ -162,10 +160,10 @@ const CreateRooms = () => {
                       }}
                     />
                     :
-                    <span className='text-center'>{room?.capacity}</span>
+                    <span className=''>{room?.capacity}</span>
                   }
                 </td>
-                <td className='py-2 px-4 text-center'>
+                <td className='py-2 px-4 '>
                   {
                     editRooms?._id === room?._id
                     ?
@@ -179,10 +177,10 @@ const CreateRooms = () => {
                       }}
                     />
                     :
-                    <span className='text-center'>{room?.location}</span>
+                    <span className=''>{room?.location}</span>
                   }
                 </td>
-                <td className='py-2 px-4 text-center'>
+                <td className='py-2 px-4 '>
                   {
                     editRooms?._id === room?._id
                     ?
@@ -198,11 +196,11 @@ const CreateRooms = () => {
                       }}
                     />
                     :
-                    <span className='text-center'>{users?.find(user => user._id===room.teacher)?.first_name} {' '} {users?.find(user => user._id === room.teacher)?.last_name}</span>
+                    <span className=''>{users?.find(user => user._id===room.teacher)?.first_name} {' '} {users?.find(user => user._id === room.teacher)?.last_name}</span>
                   }
                 </td>
               
-                <td className='text-center'>
+                <td className=''>
                   {
                     editRooms
                     ?
